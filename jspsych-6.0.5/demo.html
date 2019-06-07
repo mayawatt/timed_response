@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <script src="jspsych-6.0.5/jspsych.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-image-keyboard-response.js"></script>
+    <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+  </head>
+  <body></body>
+  <script>
+
+    /* create timeline */
+    var timeline = [];
+
+    
+    /* define welcome message trial */
+    var welcome = {
+      type: "html-keyboard-response",
+      stimulus: "Welcome to the experiment. Press any key to begin."
+    };
+    timeline.push(welcome);
+
+    
+    /* Notice that this function uses the <img> tag. The images used here came from th "img" folder, located in the jsPsych folder. */
+    var instructions = {
+      type: "html-keyboard-response",
+      stimulus: "<p>In this experiment, a circle will appear in the center " +
+          "of the screen.</p><p>If the circle is <strong>blue</strong>, " +
+          "press the letter F on the keyboard as fast as you can.</p>" +
+          "<p>If the circle is <strong>orange</strong>, press the letter J " +
+          "as fast as you can.</p>" +
+          "<div style='width: 700px;'>" +
+          "<div style='float: left;'><img src='img/f.png'></img>" +
+          "<p class='small'><strong>Press the F key</strong></p></div>" +
+          "<div class='float: right;'><img src='img/j.png'></img>" +
+          "<p class='small'><strong>Press the J key</strong></p></div>" +
+          "</div>"+
+          "<p>Press any key to begin.</p>",post_trial_gap: 2000
+    };
+    timeline.push(instructions);
+
+    /* test trials */
+
+    /*
+  
+    var blue_trial = {
+      type: 'image-keyboard-response',
+      stimulus: 'img/orange.png',
+      choices: ['f', 'j']
+    }
+    var orange_trial = {
+      type: 'image-keyboard-response',
+      stimulus: 'img/orange.png',
+      choices: ['f', 'j']
+    }
+    timeline.push(blue_trial, orange_trial);
+
+    */
+    
+    //the parameteres for showing the blue and orange circle are very similar. The only difference is which image is displayed, so we use timeline variables.
+    var test_stimuli = [
+      { stimulus: "img/blue.png", data: { test_part: 'test', correct_response: 'f' } }, 
+      { stimulus: "img/orange.png", data: { test_part: 'test', correct_response: 'j' } }
+    ];
+
+    
+    //js.Psych.NO_KEYS means no response will be accepted as a valid response and the trial will last howeevr long the trial_duration parameter specifies.
+    var fixation = {
+      type: 'html-keyboard-response',
+      stimulus: '<div style="font-size:60px;">+</div>',
+      choices: jsPsych.NO_KEYS,
+      //inside this function, we take a sample from the following array of size 1 (second parameter to jsPsych.randomization.samplesWithoutReplacement). The return value from calling this function is an array of length 1, so we add the [0] selection at the end to get the value out of the array.
+      trial_duration: function(){
+        return jsPsych.randomization.sampleWithoutReplacement([250, 500, 750, 1000, 1250, 1500, 1750, 2000], 1)[0];
+      },
+      //kinda confused in this part.
+      data: {test_part: 'fixation'}
+    }
+
+   
+    //here, we set up another trial to show the circles. jsPsych.timelineVariable() indicates that we want jsPsych to substitute the value of the parameter in from the timeline variables.
+    var test = {
+      type: "image-keyboard-response",
+      stimulus: jsPsych.timelineVariable('stimulus'),
+      choices: ['f', 'j'],
+      //assigning the data values in test_stimuli to the data parameter of the test trial.
+      data: jsPsych.timelineVariable('data'),
+      on_finish: function(data){
+        //the data.key_press value is a numeric key code indicating which key the subject pressed. The function jsPsych.pluginAPI.convertKeyCharacterToKeyCode converts the character representation of a key into the numeric representation (e.g. calling the function on the value 'f' generates the value 70). If the numeric value matches data.key_press then data.correct will be true. Otherwise, it will be false.
+        data.correct = data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.correct_response);
+      },
+    }
+
+    
+    //to link the varibales that we declared in the test_stimuli array with the call to jsPsych.timelineVariable() we need to create a new timeline and set the timeline_variables property:
+    var test_procedure = {
+      timeline: [fixation, test],
+      timeline_variables: test_stimuli,
+      //10 trials in total
+      repetitions: 5,
+      randomize_order: true
+    }
+    //we have to add the test_procedure to the main timeline array, but the fixation and test trial do not need to be added to timeline because they already exist on the test_procedure timeline.
+    timeline.push(test_procedure);
+
+
+    var debrief_block = {
+      type: "html-keyboard-response",
+      stimulus: function() {
+        //jsPsych.data.get() returns the data from the experiment. We can use ".filter" to select only the trials where test_part is 'test' (a benefit of tagging the trial). "trials" contains all of the data from the trials where a circle was shown.
+        var trials = jsPsych.data.get().filter({test_part: 'test'});
+        //to get only the correct trials, we can use .filter() again to select only the trials from the trials data collection where the property "correct" is "true"
+        var correct_trials = trials.filter({correct: true});
+        //we can use the .count() method to determine how mnay trials were correct and how many there were total. We can also use Math.round() to avoid extra digits after the decimal.
+        var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+        //to calculate the mean response time on correct trials, we use the .select method on the correct_trials data collection to select only the 'rt' property of those trials. We can then use the .mean() method to find the mean of all tbe RT values.
+        var rt = Math.round(correct_trials.select('rt').mean());
+
+        return "<p>You responded correctly on "+accuracy+"% of the trials.</p>"+
+        "<p>Your average response time was "+rt+"ms.</p>"+
+        "<p>Press any key to complete the experiment. Thank you!</p>";
+
+      }
+    };
+    timeline.push(debrief_block);
+
+    
+    /* start the experiment */
+    jsPsych.init({
+      timeline: timeline,
+      on_finish: function() {
+        jsPsych.data.displayData();
+      }
+    });
+  </script>
+</html>
