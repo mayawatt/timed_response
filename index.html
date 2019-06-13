@@ -13,23 +13,24 @@
     //create timeline
     var timeline = [];
 
-   
+    
     //welcome message and instructions
     var welcome = {
       type: "html-keyboard-response",
-      stimulus: "<p>Many English past-tense verbs have gone out-of-fashion. For example, the past tense of <strong>help</strong> used to be <strong>holp</strong>.</p>" +
+      stimulus: "<p>This experiment tests your knowledge of past-tense verbs.</p>" +
       "<p style = 'font-size: 12px;'><strong>Press any key to continue.</strong></p>"
     };
     timeline.push(welcome);
+    
 
     var instructions = {
       type: "html-keyboard-response",
-      stimulus: "<p>In this experiment, you'll be given two words in the following format:</p>" +
-          "<p>The past tense of <strong>help</strong> was <strong>holp</strong></p>" +
-          "<br>If you believe the statement is <strong>true</strong> (i.e. the second word might have been used in Old English), <strong>press the F key</strong> as fast as you can.</p>" +
-          "<p>If you believe the statement is <strong>false</strong>, <strong>press the J key</strong> as fast as you can.</p>" +
+      stimulus: "<p>You'll be given two words in the following format:</p>" +
+          "<p>The past tense of <strong>run</strong> was <strong>ran</strong></p>" +
+          "<br>If you believe the statement is true, press the F key <strong>as fast as you can</strong>.</p>" +
+          "<p>If you believe the statement is false, press the J key <strong>as fast as you can</strong>.</p>" +
           "<p>If you don't recognize the verb, use your best judgement.</p>" +
-          "<p style = 'font-size: 12px;'><strong>Press any key to begin.</strong></p>",post_trial_gap: 1250
+          "<p style = 'font-size: 12px;'><strong>Press any key to begin.</strong></br>",post_trial_gap: 1250
     };
     timeline.push(instructions);
 
@@ -1219,13 +1220,211 @@
 { stimulus: "The past tense of <strong>wink</strong> was <strong>waught</strong>" },
     ];
 
+    var test_stimuli_six = [
+{ stimulus: "The past tense of <strong>arise</strong> was <strong>arised</strong>" },
+{ stimulus: "The past tense of <strong>awake</strong> was <strong>awaked</strong>" },
+{ stimulus: "The past tense of <strong>babysit</strong> was <strong>babysited</strong>" },
+{ stimulus: "The past tense of <strong>be</strong> was <strong>bed</strong>" },
+{ stimulus: "The past tense of <strong>beat</strong> was <strong>beated</strong>" },
+{ stimulus: "The past tense of <strong>become</strong> was <strong>becomed</strong>" },
+{ stimulus: "The past tense of <strong>befall</strong> was <strong>befalled</strong>" },
+{ stimulus: "The past tense of <strong>beget</strong> was <strong>begeted</strong>" },
+{ stimulus: "The past tense of <strong>begin</strong> was <strong>begined</strong>" },
+{ stimulus: "The past tense of <strong>behold</strong> was <strong>beholded</strong>" },
+{ stimulus: "The past tense of <strong>bend</strong> was <strong>bended</strong>" },
+{ stimulus: "The past tense of <strong>beset</strong> was <strong>beseted</strong>" },
+{ stimulus: "The past tense of <strong>bespeak</strong> was <strong>bespeaked</strong>" },
+{ stimulus: "The past tense of <strong>bet</strong> was <strong>betted</strong>" },
+{ stimulus: "The past tense of <strong>bid</strong> was <strong>bided</strong>" },
+{ stimulus: "The past tense of <strong>bind</strong> was <strong>binded</strong>" },
+{ stimulus: "The past tense of <strong>bite</strong> was <strong>bited</strong>" },
+{ stimulus: "The past tense of <strong>bleed</strong> was <strong>bleeded</strong>" },
+{ stimulus: "The past tense of <strong>breed</strong> was <strong>breeded</strong>" },
+{ stimulus: "The past tense of <strong>bring</strong> was <strong>bringed</strong>" },
+{ stimulus: "The past tense of <strong>browbeat</strong> was <strong>browbeated</strong>" },
+{ stimulus: "The past tense of <strong>build</strong> was <strong>builded</strong>" },
+{ stimulus: "The past tense of <strong>burst</strong> was <strong>bursted</strong>" },
+{ stimulus: "The past tense of <strong>buy</strong> was <strong>buyed</strong>" },
+{ stimulus: "The past tense of <strong>cast</strong> was <strong>casted</strong>" },
+{ stimulus: "The past tense of <strong>catch</strong> was <strong>catched</strong>" },
+{ stimulus: "The past tense of <strong>choose</strong> was <strong>choosed</strong>" },
+{ stimulus: "The past tense of <strong>cleave</strong> was <strong>cleaved</strong>" },
+{ stimulus: "The past tense of <strong>cling</strong> was <strong>clinged</strong>" },
+{ stimulus: "The past tense of <strong>come</strong> was <strong>comed</strong>" },
+{ stimulus: "The past tense of <strong>cost</strong> was <strong>costed</strong>" },
+{ stimulus: "The past tense of <strong>creep</strong> was <strong>creeped</strong>" },
+{ stimulus: "The past tense of <strong>cut</strong> was <strong>cuted</strong>" },
+{ stimulus: "The past tense of <strong>deal</strong> was <strong>dealed</strong>" },
+{ stimulus: "The past tense of <strong>dig</strong> was <strong>diged</strong>" },
+{ stimulus: "The past tense of <strong>dive</strong> was <strong>dived</strong>" },
+{ stimulus: "The past tense of <strong>do</strong> was <strong>doed</strong>" },
+{ stimulus: "The past tense of <strong>draw</strong> was <strong>drawed</strong>" },
+{ stimulus: "The past tense of <strong>dream</strong> was <strong>dreamed</strong>" },
+{ stimulus: "The past tense of <strong>drink</strong> was <strong>drinked</strong>" },
+{ stimulus: "The past tense of <strong>drive</strong> was <strong>drived</strong>" },
+{ stimulus: "The past tense of <strong>eat</strong> was <strong>eated</strong>" },
+{ stimulus: "The past tense of <strong>fall</strong> was <strong>falled</strong>" },
+{ stimulus: "The past tense of <strong>feed</strong> was <strong>feeded</strong>" },
+{ stimulus: "The past tense of <strong>feel</strong> was <strong>feeled</strong>" },
+{ stimulus: "The past tense of <strong>fight</strong> was <strong>fighted</strong>" },
+{ stimulus: "The past tense of <strong>find</strong> was <strong>finded</strong>" },
+{ stimulus: "The past tense of <strong>fit</strong> was <strong>fitted</strong>" },
+{ stimulus: "The past tense of <strong>fling</strong> was <strong>flinged</strong>" },
+{ stimulus: "The past tense of <strong>fly</strong> was <strong>flied</strong>" },
+{ stimulus: "The past tense of <strong>forbid</strong> was <strong>forbided</strong>" },
+{ stimulus: "The past tense of <strong>foresee</strong> was <strong>foreseed</strong>" },
+{ stimulus: "The past tense of <strong>forget</strong> was <strong>forgeted</strong>" },
+{ stimulus: "The past tense of <strong>forgive</strong> was <strong>forgived</strong>" },
+{ stimulus: "The past tense of <strong>forgo</strong> was <strong>forgoed</strong>" },
+{ stimulus: "The past tense of <strong>freeze</strong> was <strong>freezed</strong>" },
+{ stimulus: "The past tense of <strong>get</strong> was <strong>geted</strong>" },
+{ stimulus: "The past tense of <strong>give</strong> was <strong>gived</strong>" },
+{ stimulus: "The past tense of <strong>go</strong> was <strong>goed</strong>" },
+{ stimulus: "The past tense of <strong>grind</strong> was <strong>grinded</strong>" },
+{ stimulus: "The past tense of <strong>grow</strong> was <strong>growed</strong>" },
+{ stimulus: "The past tense of <strong>hang</strong> was <strong>hanged</strong>" },
+{ stimulus: "The past tense of <strong>hear</strong> was <strong>heared</strong>" },
+{ stimulus: "The past tense of <strong>heat</strong> was <strong>heated</strong>" },
+{ stimulus: "The past tense of <strong>hide</strong> was <strong>hided</strong>" },
+{ stimulus: "The past tense of <strong>hit</strong> was <strong>hited</strong>" },
+{ stimulus: "The past tense of <strong>hold</strong> was <strong>holded</strong>" },
+{ stimulus: "The past tense of <strong>hurt</strong> was <strong>hurted</strong>" },
+{ stimulus: "The past tense of <strong>keep</strong> was <strong>keeped</strong>" },
+{ stimulus: "The past tense of <strong>kneel</strong> was <strong>kneeled</strong>" },
+{ stimulus: "The past tense of <strong>lead</strong> was <strong>leaded</strong>" },
+{ stimulus: "The past tense of <strong>leap</strong> was <strong>leaped</strong>" },
+{ stimulus: "The past tense of <strong>leave</strong> was <strong>leaved</strong>" },
+{ stimulus: "The past tense of <strong>lend</strong> was <strong>lended</strong>" },
+{ stimulus: "The past tense of <strong>let</strong> was <strong>leted</strong>" },
+{ stimulus: "The past tense of <strong>light</strong> was <strong>lighted</strong>" },
+{ stimulus: "The past tense of <strong>lose</strong> was <strong>losed</strong>" },
+{ stimulus: "The past tense of <strong>make</strong> was <strong>maked</strong>" },
+{ stimulus: "The past tense of <strong>mean</strong> was <strong>meaned</strong>" },
+{ stimulus: "The past tense of <strong>meet</strong> was <strong>meeted</strong>" },
+{ stimulus: "The past tense of <strong>mislead</strong> was <strong>misleaded</strong>" },
+{ stimulus: "The past tense of <strong>misspend</strong> was <strong>misspended</strong>" },
+{ stimulus: "The past tense of <strong>mistake</strong> was <strong>mistaked</strong>" },
+{ stimulus: "The past tense of <strong>misunderstand</strong> was <strong>misunderstanded</strong>" },
+{ stimulus: "The past tense of <strong>offset</strong> was <strong>offseted</strong>" },
+{ stimulus: "The past tense of <strong>outbid</strong> was <strong>outbided</strong>" },
+{ stimulus: "The past tense of <strong>outdo</strong> was <strong>outdoed</strong>" },
+{ stimulus: "The past tense of <strong>outgrow</strong> was <strong>outgrowed</strong>" },
+{ stimulus: "The past tense of <strong>outrun</strong> was <strong>outruned</strong>" },
+{ stimulus: "The past tense of <strong>outsell</strong> was <strong>outselled</strong>" },
+{ stimulus: "The past tense of <strong>outshine</strong> was <strong>outshined</strong>" },
+{ stimulus: "The past tense of <strong>overcome</strong> was <strong>overcomed</strong>" },
+{ stimulus: "The past tense of <strong>overdo</strong> was <strong>overdoed</strong>" },
+{ stimulus: "The past tense of <strong>overhang</strong> was <strong>overhanged</strong>" },
+{ stimulus: "The past tense of <strong>overhear</strong> was <strong>overheared</strong>" },
+{ stimulus: "The past tense of <strong>overlay</strong> was <strong>overlayed</strong>" },
+{ stimulus: "The past tense of <strong>oversee</strong> was <strong>overseed</strong>" },
+{ stimulus: "The past tense of <strong>oversell</strong> was <strong>overselled</strong>" },
+{ stimulus: "The past tense of <strong>overtake</strong> was <strong>overtaked</strong>" },
+{ stimulus: "The past tense of <strong>overthrow</strong> was <strong>overthrowed</strong>" },
+{ stimulus: "The past tense of <strong>partake</strong> was <strong>partaked</strong>" },
+{ stimulus: "The past tense of <strong>plead</strong> was <strong>pleaded</strong>" },
+{ stimulus: "The past tense of <strong>proofread</strong> was <strong>proofreaded</strong>" },
+{ stimulus: "The past tense of <strong>put</strong> was <strong>puted</strong>" },
+{ stimulus: "The past tense of <strong>quit</strong> was <strong>quitted</strong>" },
+{ stimulus: "The past tense of <strong>read</strong> was <strong>readed</strong>" },
+{ stimulus: "The past tense of <strong>rebuild</strong> was <strong>rebuilded</strong>" },
+{ stimulus: "The past tense of <strong>redo</strong> was <strong>redoed</strong>" },
+{ stimulus: "The past tense of <strong>redraw</strong> was <strong>redrawed</strong>" },
+{ stimulus: "The past tense of <strong>remake</strong> was <strong>remaked</strong>" },
+{ stimulus: "The past tense of <strong>reread</strong> was <strong>rereaded</strong>" },
+{ stimulus: "The past tense of <strong>resell</strong> was <strong>reselled</strong>" },
+{ stimulus: "The past tense of <strong>reset</strong> was <strong>reseted</strong>" },
+{ stimulus: "The past tense of <strong>retake</strong> was <strong>retaked</strong>" },
+{ stimulus: "The past tense of <strong>retell</strong> was <strong>retelled</strong>" },
+{ stimulus: "The past tense of <strong>rethink</strong> was <strong>rethinked</strong>" },
+{ stimulus: "The past tense of <strong>rewrite</strong> was <strong>rewrited</strong>" },
+{ stimulus: "The past tense of <strong>rid</strong> was <strong>ridded</strong>" },
+{ stimulus: "The past tense of <strong>ride</strong> was <strong>rided</strong>" },
+{ stimulus: "The past tense of <strong>ring</strong> was <strong>ringed</strong>" },
+{ stimulus: "The past tense of <strong>rise</strong> was <strong>rised</strong>" },
+{ stimulus: "The past tense of <strong>run</strong> was <strong>runed</strong>" },
+{ stimulus: "The past tense of <strong>say</strong> was <strong>sayed</strong>" },
+{ stimulus: "The past tense of <strong>see</strong> was <strong>seed</strong>" },
+{ stimulus: "The past tense of <strong>seek</strong> was <strong>seeked</strong>" },
+{ stimulus: "The past tense of <strong>sell</strong> was <strong>selled</strong>" },
+{ stimulus: "The past tense of <strong>send</strong> was <strong>sended</strong>" },
+{ stimulus: "The past tense of <strong>set</strong> was <strong>seted</strong>" },
+{ stimulus: "The past tense of <strong>shake</strong> was <strong>shaked</strong>" },
+{ stimulus: "The past tense of <strong>shed</strong> was <strong>sheded</strong>" },
+{ stimulus: "The past tense of <strong>shine</strong> was <strong>shined</strong>" },
+{ stimulus: "The past tense of <strong>shoot</strong> was <strong>shooted</strong>" },
+{ stimulus: "The past tense of <strong>shrink</strong> was <strong>shrinked</strong>" },
+{ stimulus: "The past tense of <strong>shut</strong> was <strong>shuted</strong>" },
+{ stimulus: "The past tense of <strong>sing</strong> was <strong>singed</strong>" },
+{ stimulus: "The past tense of <strong>sink</strong> was <strong>sinked</strong>" },
+{ stimulus: "The past tense of <strong>sit</strong> was <strong>sited</strong>" },
+{ stimulus: "The past tense of <strong>sleep</strong> was <strong>sleeped</strong>" },
+{ stimulus: "The past tense of <strong>slide</strong> was <strong>slided</strong>" },
+{ stimulus: "The past tense of <strong>sling</strong> was <strong>slinged</strong>" },
+{ stimulus: "The past tense of <strong>slit</strong> was <strong>slited</strong>" },
+{ stimulus: "The past tense of <strong>sneak</strong> was <strong>sneaked</strong>" },
+{ stimulus: "The past tense of <strong>speak</strong> was <strong>speaked</strong>" },
+{ stimulus: "The past tense of <strong>spend</strong> was <strong>spended</strong>" },
+{ stimulus: "The past tense of <strong>spin</strong> was <strong>spined</strong>" },
+{ stimulus: "The past tense of <strong>spit</strong> was <strong>spited</strong>" },
+{ stimulus: "The past tense of <strong>split</strong> was <strong>splited</strong>" },
+{ stimulus: "The past tense of <strong>spread</strong> was <strong>spreaded</strong>" },
+{ stimulus: "The past tense of <strong>spring</strong> was <strong>springed</strong>" },
+{ stimulus: "The past tense of <strong>stand</strong> was <strong>standed</strong>" },
+{ stimulus: "The past tense of <strong>steal</strong> was <strong>stealed</strong>" },
+{ stimulus: "The past tense of <strong>stick</strong> was <strong>sticked</strong>" },
+{ stimulus: "The past tense of <strong>sting</strong> was <strong>stinged</strong>" },
+{ stimulus: "The past tense of <strong>stink</strong> was <strong>stinked</strong>" },
+{ stimulus: "The past tense of <strong>stride</strong> was <strong>strided</strong>" },
+{ stimulus: "The past tense of <strong>strike</strong> was <strong>striked</strong>" },
+{ stimulus: "The past tense of <strong>string</strong> was <strong>stringed</strong>" },
+{ stimulus: "The past tense of <strong>strive</strong> was <strong>strived</strong>" },
+{ stimulus: "The past tense of <strong>sublet</strong> was <strong>subleted</strong>" },
+{ stimulus: "The past tense of <strong>swear</strong> was <strong>sweared</strong>" },
+{ stimulus: "The past tense of <strong>sweep</strong> was <strong>sweeped</strong>" },
+{ stimulus: "The past tense of <strong>swim</strong> was <strong>swimed</strong>" },
+{ stimulus: "The past tense of <strong>swing</strong> was <strong>swinged</strong>" },
+{ stimulus: "The past tense of <strong>take</strong> was <strong>taked</strong>" },
+{ stimulus: "The past tense of <strong>teach</strong> was <strong>teached</strong>" },
+{ stimulus: "The past tense of <strong>tear</strong> was <strong>teared</strong>" },
+{ stimulus: "The past tense of <strong>tell</strong> was <strong>telled</strong>" },
+{ stimulus: "The past tense of <strong>think</strong> was <strong>thinked</strong>" },
+{ stimulus: "The past tense of <strong>throw</strong> was <strong>throwed</strong>" },
+{ stimulus: "The past tense of <strong>thrust</strong> was <strong>thrusted</strong>" },
+{ stimulus: "The past tense of <strong>tread</strong> was <strong>treaded</strong>" },
+{ stimulus: "The past tense of <strong>undercut</strong> was <strong>undercuted</strong>" },
+{ stimulus: "The past tense of <strong>undergo</strong> was <strong>undergoed</strong>" },
+{ stimulus: "The past tense of <strong>underlie</strong> was <strong>underlied</strong>" },
+{ stimulus: "The past tense of <strong>undersell</strong> was <strong>underselled</strong>" },
+{ stimulus: "The past tense of <strong>understand</strong> was <strong>understanded</strong>" },
+{ stimulus: "The past tense of <strong>undertake</strong> was <strong>undertaked</strong>" },
+{ stimulus: "The past tense of <strong>underwrite</strong> was <strong>underwrited</strong>" },
+{ stimulus: "The past tense of <strong>undo</strong> was <strong>undoed</strong>" },
+{ stimulus: "The past tense of <strong>unwind</strong> was <strong>unwinded</strong>" },
+{ stimulus: "The past tense of <strong>uphold</strong> was <strong>upholded</strong>" },
+{ stimulus: "The past tense of <strong>uprise</strong> was <strong>uprised</strong>" },
+{ stimulus: "The past tense of <strong>upset</strong> was <strong>upseted</strong>" },
+{ stimulus: "The past tense of <strong>wake</strong> was <strong>waked</strong>" },
+{ stimulus: "The past tense of <strong>wear</strong> was <strong>weared</strong>" },
+{ stimulus: "The past tense of <strong>weave</strong> was <strong>weaved</strong>" },
+{ stimulus: "The past tense of <strong>weep</strong> was <strong>weeped</strong>" },
+{ stimulus: "The past tense of <strong>win</strong> was <strong>wined</strong>" },
+{ stimulus: "The past tense of <strong>withdraw</strong> was <strong>withdrawed</strong>" },
+{ stimulus: "The past tense of <strong>withhold</strong> was <strong>withholded</strong>" },
+{ stimulus: "The past tense of <strong>withstand</strong> was <strong>withstanded</strong>" },
+{ stimulus: "The past tense of <strong>write</strong> was <strong>writed</strong>" },
+{ stimulus: "The past tense of <strong>wind</strong> was <strong>winded</strong>" },
+{ stimulus: "The past tense of <strong>break</strong> was <strong>breaked</strong>" }
+    ];
+
     
-    //randomly selecting stimuli from each group, proportinal to the size of the groups. There are 85 in group 1, 609 in group 2, 156 in group 3, 167 in group 4, and 152 in group 5.
+    //randomly selecting stimuli from each group, proportinal to the size of the groups. There are 85 in group 1, 609 in group 2, 156 in group 3, 167 in group 4, and 152 in group 5. 1169 in total. There are 11 stimuli total (I rounded to the nearest whole number, so theres one extra).
     var sample_one = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_one, 1);
-    var sample_two = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_two, 6);
-    var sample_three = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_three, 2);
-    var sample_four = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_four, 2);
-    var sample_five = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_five, 2);
+    var sample_two = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_two, 5);
+    var sample_three = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_three, 1);
+    var sample_four = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_four, 1);
+    var sample_five = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_five, 1);
+    var sample_six = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_six, 2);
     
     
     //creating the test
@@ -1278,6 +1477,13 @@
       randomize_order: true,
     }
     timeline.push(trial_five);
+
+    var trial_six = {
+      timeline: [test],
+      timeline_variables: sample_six,
+      randomize_order: true,
+    }
+    timeline.push(trial_six);
 
 
     //displaying a goodbye message and pushing onto the timeline
