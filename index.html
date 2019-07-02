@@ -2,47 +2,44 @@
 <html>
   <head>
     <title>timed response</title>
-   <script src="jspsych-6.0.5/jspsych.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-call-function.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-firestore.js"></script>
     <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-database.js"></script>
+    <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyDrLrP7CszjZU5Y_ijiZN0ZTWYrzapN8Ik",
+      authDomain: "timed-response-9151d.firebaseapp.com",
+      databaseURL: "https://timed-response-9151d.firebaseio.com",
+      projectId: "timed-response-9151d",
+      storageBucket: "timed-response-9151d.appspot.com",
+      messagingSenderId: "824844136558",
+      appId: "1:514911998813:web:574d1bf51c53c2c3"
+    };
+    firebase.initializeApp(firebaseConfig);
+    </script>
   </head>
   <body></body>
   <script>
-
-    // Your web app's Firebase configuration
-    var firebaseConfig = {
-      apiKey: "AIzaSyAzxQ9iKeKCB2RLnGXy_BeFL3m8So6luvo",
-      authDomain: "timedresponse-d5c04.firebaseapp.com",
-      databaseURL: "https://timedresponse-d5c04.firebaseio.com",
-      projectId: "timedresponse-d5c04",
-      storageBucket: "timedresponse-d5c04.appspot.com",
-      messagingSenderId: "514911998813",
-      appId: "1:514911998813:web:574d1bf51c53c2c3"
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-
+  
     //this used to be in a plugin. Remeber to put the 'r' back into script.
     //<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></scipt>
 
     // Get a reference to the database service
     //var database = firebase.database();
 
-    var subject_id = jsPsych.randomization.randomID(15);
-
     //create timeline
     var timeline = [];
-
     
     //welcome message and instructions
     var welcome = {
       type: "html-keyboard-response",
       stimulus: "<p>This experiment is a lexical decision task.</p>" +
-      "<p style = 'font-size: 12px;'><strong>Press any key to continue.</strong></p>"
+      "<p style = 'font-size: 12px;'><strong>Press any key to continue.</strong></p>",
     };
     timeline.push(welcome);
     
@@ -1472,6 +1469,9 @@
       timeline: [test],
       timeline_variables: sample_one,
       randomize_order: true,
+      data: {
+        node_data: true
+      }
     }
     timeline.push(trial_one);
 
@@ -1479,13 +1479,19 @@
       timeline: [test],
       timeline_variables: sample_two,
       randomize_order: true,
+      data: {
+        node_data: true
+      }
     }
     timeline.push(trial_two);
 
     var trial_three = {
       timeline: [test],
       timeline_variables: sample_three,
-      randomize_order: true,
+      randomize_order: true,   
+      data: {
+        node_data: true
+      } 
     }
     timeline.push(trial_three);
 
@@ -1493,6 +1499,9 @@
       timeline: [test],
       timeline_variables: sample_four,
       randomize_order: true,
+      data: {
+        node_data: true
+      }
     }
     timeline.push(trial_four);
 
@@ -1500,6 +1509,9 @@
       timeline: [test],
       timeline_variables: sample_five,
       randomize_order: true,
+      data: {
+        node_data: true
+      }
     }
     timeline.push(trial_five);
 
@@ -1507,6 +1519,9 @@
       timeline: [test],
       timeline_variables: sample_six,
       randomize_order: true,
+      data: {
+        node_data: true
+      }
     }
     timeline.push(trial_six);
 
@@ -1514,7 +1529,7 @@
     //displaying a goodbye message and pushing onto the timeline
     var goodbye = {
       type: "html-keyboard-response",
-      stimulus: "<strong>Congratulations!</strong>" + "<p>You've completed the experiment.</p>" + "<br>Thank you for your participation.</p>"
+      stimulus: "<strong>Congratulations!</strong>" + "<p>You've completed the experiment.</p>" + "<br>Thank you for your participation.</p>",
     };
     timeline.push(goodbye);
     
@@ -1527,16 +1542,38 @@
       xhr.send(JSON.stringify({filename: name, filedata: data}));
     }
 
-    */
-
     function writeUserData(userID) {
-      firebase.database().ref('users/' + userId).set({
-      });
+      var id = firebase.database().ref('userID/');
+      id.push(userID);
     }
+    */
+    function makeid(){
+      var text = "";
+      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      for( var i=0; i < 5; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      return text;
+  }
+
+    function saveToFirebase(code, filedata){
+      var ref = firebase.database().ref(code).set(filedata);
+    }
+
+    var code = makeid();
+
+    var submit_block = {
+      type: "html-keyboard-response",
+      stimulus: "<p>Press any key to submit data.</p>",
+      on_finish: function() {
+        saveToFirebase('subject_code', JSON.parse(JSON.stringify(jsPsych.data.get())));
+      }
+    }
+    timeline.push(submit_block)
 
     jsPsych.init({
       timeline: timeline,
-      on_finish: function(){ writeUserData(subject_id) }
+      on_finish: function() {
+      }
     });
   
   </script>
