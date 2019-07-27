@@ -10,21 +10,14 @@
     <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-database.js"></script>
-    <script>
-    var firebaseConfig = {
-      apiKey: "AIzaSyDrLrP7CszjZU5Y_ijiZN0ZTWYrzapN8Ik",
-      authDomain: "timed-response-9151d.firebaseapp.com",
-      databaseURL: "https://timed-response-9151d.firebaseio.com",
-      projectId: "timed-response-9151d",
-      storageBucket: "timed-response-9151d.appspot.com",
-      messagingSenderId: "824844136558",
-      appId: "1:514911998813:web:574d1bf51c53c2c3"
-    };
-    firebase.initializeApp(firebaseConfig);
-    </script>
   </head>
-  <body></body>
+  <body>
+    <pre id="participant"></pre>
+    <script src="app.js"></script>
+  </body>
   <script>
+
+    var database = firebase.database();
   
     //this used to be in a plugin. Remeber to put the 'r' back into script.
     //<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></scipt>
@@ -1468,60 +1461,42 @@
     var trial_one = {
       timeline: [test],
       timeline_variables: sample_one,
-      randomize_order: true,
-      data: {
-        node_data: true
-      }
+      randomize_order: true
     }
     timeline.push(trial_one);
 
     var trial_two = {
       timeline: [test],
       timeline_variables: sample_two,
-      randomize_order: true,
-      data: {
-        node_data: true
-      }
+      randomize_order: true
     }
     timeline.push(trial_two);
 
     var trial_three = {
       timeline: [test],
       timeline_variables: sample_three,
-      randomize_order: true,   
-      data: {
-        node_data: true
-      } 
+      randomize_order: true
     }
     timeline.push(trial_three);
 
     var trial_four = {
       timeline: [test],
       timeline_variables: sample_four,
-      randomize_order: true,
-      data: {
-        node_data: true
-      }
+      randomize_order: true
     }
     timeline.push(trial_four);
 
     var trial_five = {
       timeline: [test],
       timeline_variables: sample_five,
-      randomize_order: true,
-      data: {
-        node_data: true
-      }
+      randomize_order: true
     }
     timeline.push(trial_five);
 
     var trial_six = {
       timeline: [test],
       timeline_variables: sample_six,
-      randomize_order: true,
-      data: {
-        node_data: true
-      }
+      randomize_order: true
     }
     timeline.push(trial_six);
 
@@ -1553,28 +1528,41 @@
       for( var i=0; i < 5; i++ )
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
-  }
+    }
 
     function saveToFirebase(code, filedata){
       var ref = firebase.database().ref(code).set(filedata);
     }
 
-    var code = makeid();
+    function writeUserData(code) {
+      firebase.database().ref('users/' + code).set({
+      //User ID: code,
+      data: jsPsych.data.get().csv(),
+      participantID: code
+      });
+    }
+
+    //var code = makeid();
 
     var submit_block = {
       type: "html-keyboard-response",
       stimulus: "<p>Press any key to submit data.</p>",
+      timing_response: .001,      
+      timing_post_trial: 0,
       on_finish: function() {
-        saveToFirebase('subject_code', JSON.parse(JSON.stringify(jsPsych.data.get())));
+        var code = makeid();
+        jsPsych.data.displayData();
+        writeUserData(code);
       }
     }
-    timeline.push(submit_block)
+    timeline.push(submit_block);
 
     jsPsych.init({
-      timeline: timeline,
-      on_finish: function() {
-      }
+      timeline: timeline
+      //on_finish: function() {
+      //}
     });
+
   
   </script>
 </html>
