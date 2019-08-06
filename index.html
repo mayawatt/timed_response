@@ -1463,51 +1463,53 @@
       timeline_variables: sample_one,
       randomize_order: true
     }
-    timeline.push(trial_one);
+    //timeline.push(trial_one);
 
     var trial_two = {
       timeline: [test],
       timeline_variables: sample_two,
       randomize_order: true
     }
-    timeline.push(trial_two);
+    //timeline.push(trial_two);
 
     var trial_three = {
       timeline: [test],
       timeline_variables: sample_three,
       randomize_order: true
     }
-    timeline.push(trial_three);
+    //timeline.push(trial_three);
 
     var trial_four = {
       timeline: [test],
       timeline_variables: sample_four,
       randomize_order: true
     }
-    timeline.push(trial_four);
+    //timeline.push(trial_four);
 
     var trial_five = {
       timeline: [test],
       timeline_variables: sample_five,
       randomize_order: true
     }
-    timeline.push(trial_five);
+    //timeline.push(trial_five);
 
     var trial_six = {
       timeline: [test],
       timeline_variables: sample_six,
       randomize_order: true
     }
-    timeline.push(trial_six);
+    //timeline.push(trial_six);
 
+    var array = [trial_one, trial_two, trial_three, trial_four, trial_five, trial_six];
+    var shuffledArray = jsPsych.randomization.shuffle(array);
 
-    //displaying a goodbye message and pushing onto the timeline
-    var goodbye = {
-      type: "html-keyboard-response",
-      stimulus: "<strong>Congratulations!</strong>" + "<p>You've completed the experiment.</p>" + "<br>Thank you for your participation.</p>",
-    };
-    timeline.push(goodbye);
-    
+    timeline.push(shuffledArray[0]);
+    timeline.push(shuffledArray[1]);
+    timeline.push(shuffledArray[2]);
+    timeline.push(shuffledArray[3]);
+    timeline.push(shuffledArray[4]);
+    timeline.push(shuffledArray[5]);
+
     /*
 
     function saveData(name, data){
@@ -1523,11 +1525,7 @@
     }
     */
     function makeid(){
-      var text = "";
-      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      for( var i=0; i < 5; i++ )
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-      return text;
+      return jsPsych.randomization.randomID(5);
     }
 
     function saveToFirebase(code, filedata){
@@ -1538,7 +1536,7 @@
       firebase.database().ref('users/' + code).set({
       //User ID: code,
       data: jsPsych.data.get().csv(),
-      participantID: code
+      interactionData: jsPsych.data.getInteractionData().csv()
       });
     }
 
@@ -1546,12 +1544,11 @@
 
     var submit_block = {
       type: "html-keyboard-response",
-      stimulus: "<p>Press any key to submit data.</p>",
+      stimulus: "<strong>Congratulations!</strong>" + "<p>You've completed the experiment.</p>" + "<br>Thank you for your participation.</p>" + "<p style = 'font-size: 12px;'><strong>Press any key to submit the data.</strong></p>",
       timing_response: .001,      
       timing_post_trial: 0,
       on_finish: function() {
         var code = makeid();
-        jsPsych.data.displayData();
         writeUserData(code);
       }
     }
