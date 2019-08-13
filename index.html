@@ -1555,11 +1555,14 @@
     timeline.push(submit_block);
 
     jsPsych.init({
-      timeline: timeline
-      //on_finish: function() {
-      //}
+      timeline: timeline,
+      on_finish: function() {
+        var turk = jsPsych.turk.turkInfo().hitId;
+        alert("Your survey code is " + turk + ". Please enter this code into your HIT." + " You may then close this window.");
+      }
     });
 
+    //var turk = 'TURK' + jsPsych.randomization.randomID(10);
   
   </script>
 </html>
