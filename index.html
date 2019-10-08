@@ -1540,7 +1540,7 @@
       });
     }
 
-    //var code = makeid();
+    var code = makeid();
 
     var submit_block = {
       type: "html-keyboard-response",
@@ -1548,7 +1548,7 @@
       timing_response: .001,      
       timing_post_trial: 0,
       on_finish: function() {
-        var code = makeid();
+        //var code = makeid();
         writeUserData(code);
       }
     }
