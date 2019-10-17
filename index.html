@@ -47,11 +47,11 @@
 
     var instructions = {
       type: "html-keyboard-response",
-      stimulus: "<p>You'll be given a word in the following format:</p>" +
+      stimulus: "<p><strong><u>INSTRUCTIONS</u></strong></p>" + "<p>You'll be given a word in the following format:</p>" +
           "<p><strong>jumping</strong></p>" +
-          "<br>If the above word is a <strong>real word</strong>, press the F key <strong>as fast as you can</strong>.</p>" +
-          "<p>If the above word is <strong>not a real word</strong>, press the J key <strong>as fast as you can</strong>.</p>" +
-          "<br>Place your fingers on the F and J keys.</br>" +
+          "<br>If the presented word is a <strong>real word</strong>, press the F key <strong>as fast as you can</strong>.</p>" +
+          "<p>If the presented word is <strong>not a real word</strong>, press the J key <strong>as fast as you can</strong>.</p>" +
+          "<br>When you're ready, place your fingers on the F and J keys.</br>" +
           "<p style = 'font-size: 12px;'><strong>Press any key to begin.</strong></br>",
            post_trial_gap: 1250,
     };
@@ -1448,6 +1448,10 @@
     var sample_four = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_four, 10);
     var sample_five = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_five, 10);
     var sample_six = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_six, 20);
+
+    var big = sample_one.concat(sample_two, sample_three, sample_four, sample_five, sample_six);
+
+    var big_shuffled = jsPsych.randomization.shuffle(big);
     
     
     //creating the test
@@ -1468,11 +1472,12 @@
     //creating the individual trials and pushing them onto the timeline
     var trial_one = {
       timeline: [test],
-      timeline_variables: sample_one,
-      randomize_order: true
+      timeline_variables: big_shuffled,
+      //randomize_order: true
     }
-    //timeline.push(trial_one);
-
+    timeline.push(trial_one);
+    
+    /*
     var trial_two = {
       timeline: [test],
       timeline_variables: sample_two,
@@ -1517,6 +1522,7 @@
     timeline.push(shuffledArray[3]);
     timeline.push(shuffledArray[4]);
     timeline.push(shuffledArray[5]);
+    
 
     /*
 
@@ -1571,7 +1577,7 @@
       timeline: timeline,
       on_finish: function() {
         //var turk = jsPsych.turk.turkInfo().hitId
-        alert("Your survey code is " + code + ". Please copy and paste this code into the homepage." + " You may then close this window." + " If you clicked the link directly, you may go back.");
+        alert("Your survey code is " + code + ". Please copy and paste this code into the homepage." + " You may then close this tab.");
       }
     });
 
