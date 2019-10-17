@@ -5,6 +5,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-image-button-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-call-function.js"></script>
     <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
     <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
@@ -27,6 +28,14 @@
 
     //create timeline
     var timeline = [];
+
+    var robot = {
+      type: "image-button-response",
+      stimulus: 'img/horses.png',
+      choices: ['Dolphin', 'Horse', 'Tiger', 'Elephant'],
+      prompt: "<p>What animal is in the picture?</p>"
+    };
+    timeline.push(robot);
     
     //welcome message and instructions
     var welcome = {
@@ -35,7 +44,6 @@
       "<p style = 'font-size: 12px;'><strong>Press any key to continue.</strong></p>",
     };
     timeline.push(welcome);
-    
 
     var instructions = {
       type: "html-keyboard-response",
@@ -1434,12 +1442,12 @@
 
     
     //randomly selecting stimuli from each group, proportinal to the size of the groups. There are 85 in group 1, 609 in group 2, 156 in group 3, 167 in group 4, and 152 in group 5. 1169 in total. There are 11 stimuli total (I rounded to the nearest whole number, so theres one extra).
-    var sample_one = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_one, 1);
-    var sample_two = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_two, 5);
-    var sample_three = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_three, 1);
-    var sample_four = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_four, 1);
-    var sample_five = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_five, 1);
-    var sample_six = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_six, 2);
+    var sample_one = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_one, 10);
+    var sample_two = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_two, 50);
+    var sample_three = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_three, 10);
+    var sample_four = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_four, 10);
+    var sample_five = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_five, 10);
+    var sample_six = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_six, 20);
     
     
     //creating the test
@@ -1524,9 +1532,14 @@
       id.push(userID);
     }
     */
+    var code = jsPsych.randomization.randomID(5);
+
+    /*
     function makeid(){
-      return jsPsych.randomization.randomID(5);
+      code = jsPsych.randomization.randomID(5);
+      return code;
     }
+    */
 
     function saveToFirebase(code, filedata){
       var ref = firebase.database().ref(code).set(filedata);
@@ -1548,7 +1561,7 @@
       timing_response: .001,      
       timing_post_trial: 0,
       on_finish: function() {
-        var code = makeid();
+        //var code = makeid();
         writeUserData(code);
       }
     }
@@ -1558,7 +1571,7 @@
       timeline: timeline,
       on_finish: function() {
         //var turk = jsPsych.turk.turkInfo().hitId
-        alert("Your survey code is 4444. Please enter this code into your HIT." + " You may then close this window." + "If you clicked the link directly, you may go back.");
+        alert("Your survey code is " + code + ". Please copy and paste this code into the homepage." + " You may then close this window." + " If you clicked the link directly, you may go back.");
       }
     });
 
