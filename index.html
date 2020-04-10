@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  	<meta charset="utf-8"/>
     <title>timed response</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-image-keyboard-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-image-button-response.js"></script>
+     <script src="jspsych-6.0.5/plugins/jspsych-same-different-html.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-dropdown.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-survey-multi-choice.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-survey-likert.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-call-function.js"></script>
+
+<!-- Include Choices CSS -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"
+/>
+<!-- Include Choices JavaScript (latest) -->
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+  <head>
     <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
     <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-auth.js"></script>
@@ -18,9 +33,18 @@
   </body>
   <script>
 
+  	/* <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js">< /script>
+
+  	remember to take the space out of the second script
+
+  	 <link rel = “stylesheet” href=“static/js/jspsych-6/choices.js/public/assets/styles/base.css”/>
+    <link rel = “stylesheet” href=“static/js/jspsych-6/choices.js/public/assets/styles/choices.min.css”/>
+
+  	*/
+
     var database = firebase.database();
   
-    //this used to be in a plugin. Remeber to put the 'r' back into script.
+    //this used to be in a plugin. Remember to put the 'r' back into script.
     //<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></scipt>
 
     // Get a reference to the database service
@@ -36,6 +60,123 @@
       prompt: "<p>What animal is in the picture?</p>"
     };
     timeline.push(robot);
+
+    
+    //welcome message and instructions
+    var welcome = {
+      type: "html-keyboard-response",
+      stimulus: "<p>Welcome to our experiment on lexical decision making.</p>" + "<p>We ask that you read the instructions <strong>carefully</strong> as you will not be able to go back during the experiment.</p>" + "<p>At the end, a <strong>pop-up</strong> will appear that can you can copy-paste into Mechanical Turk.</p>" +
+      "<p style = 'font-size: 12px;'><strong>Press any key to continue.</strong></p>",
+    };
+    timeline.push(welcome);
+
+    var calibration_test_instructions = {
+      type: "html-keyboard-response",
+      stimulus: "<p><strong><u>CALIBRATION TEST INSTRUCTIONS</u></strong></p>" + "<p>Before we begin our experiment, we ask that you complete a calibration test. </p>" + "<p>A blue circle will appear in the center of the screen. </p>" + "<p>When it does, press the letter <strong>F</strong> on your keyboard <strong>as fast as you can</strong>.</p>" + "<p style = 'font-size: 12px;'><strong>When you're ready, place your finger on the F key and press any key to begin.</p>",
+      post_trial_gap: 1250
+    };
+    timeline.push(calibration_test_instructions);
+    
+
+    var test_stimuli = [
+      {stimulus: "img/blue.png"},
+    ];
+
+    var calibration_fixation = {
+      type: 'html-keyboard-response',
+      stimulus: '<div style="font-size:60px;">+</div>',
+      choices: jsPsych.NO_KEYS,
+      //prompt: "<p>Press F when a blue circle appears.</p>",
+      trial_duration: function() {
+        return jsPsych.randomization.sampleWithoutReplacement([1000], 1)[0];
+      }
+    }
+
+    var calibration_test = {
+      type: "image-keyboard-response",
+      stimulus: jsPsych.timelineVariable('stimulus'),
+      choice: ['f']
+    };
+
+    var calibration_test_procedure = {
+      timeline: [calibration_fixation, calibration_test],
+      timeline_variables: test_stimuli,
+      //randomized_order: true,
+      repetitions: 5
+    }
+    timeline.push(calibration_test_procedure);
+
+    var calibration_end = {
+      type: "html-keyboard-response",
+      stimulus: "<p>Thank you for completing the calibration test.</p>" + "<p style = 'font-size: 12px;'><strong>Press any key to continue.</p>" ,
+    }
+    timeline.push(calibration_end);
+
+
+    var languages = ["Afrikaans","Albanian","Arabic","Armenian","Basque","Bengali","Bulgarian",
+                                "Catalan","Cambodian","Chinese(Mandarin)","Croatian","Czech",
+                                "Danish","Dutch","English","Estonian","Fiji","Finnish","French",
+                                "Georgian","German","Greek","Gujarati","Hebrew","Hindi","Hungarian",
+                                "Icelandic","Indonesian","Irish","Italian","Japanese","Javanese",
+                                "Korean","Latin","Latvian","Lithuanian","Macedonian","Malay",
+                                "Malayalam","Maltese","Maori","Marathi","Mongolian","Nepali",
+                                "Norwegian","Persian","Polish","Portuguese","Punjabi","Quechua",
+                                "Romanian","Russian","Samoan","Serbian","Slovak","Slovenian",
+                                "Spanish","Swahili","Swedish","Tamil","Tatar","Telugu",
+                                "Thai","Tibetan","Tonga","Turkish","Ukrainian","Urdu",
+                                "Uzbek","Vietnamese","Welsh","Xhosa"];
+
+    var ages = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25",
+    "26", "27", "28", "28", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50",
+    "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "75", "75", "76",
+    "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100"];
+    
+    var sex = ["Male", "Female"];
+
+
+var demographics = {
+	type: 'dropdown',
+	superq: "Please answer the following questions:",
+    questions: [
+		{
+  			text: "<strong>What language do you speak most often?</strong>",
+  			options: languages,
+  			allowMultipleSelections: false,
+  			required: true,
+  			placeholder: "Select language",
+		},
+		{
+ 			text: "<strong>What language do you speak at home?</strong>",
+  			options: languages,
+  			allowMultipleSelections: false,
+  			required: true,
+  			placeholder: "Select language",
+		},
+		{
+  			text: "<strong>What is your mother tongue? (i.e. the first language you learned at home during childhood and still understand to this day.)</strong>",
+  			options: languages,
+  			allowMultipleSelections: false,
+  			required: true,
+  			placeholder: "Select language",
+		},
+		{
+  			text: "<strong>What is your age?</strong>",
+  			options: ages,
+  			allowMultipleSelections: false,
+  			required: true,
+  			placeholder: "Select age",
+		},
+		{
+  			text: "<strong>What is your sex?</strong>",
+  			options: ["Male", "Female", "Other"],
+  			allowMultipleSelections: false,
+  			required: true,
+  			placeholder: "Select sex",
+		}
+		],
+		};
+timeline.push(demographics);
+
     
     //welcome message and instructions
     var welcome = {
@@ -44,1423 +185,624 @@
       "<p style = 'font-size: 12px;'><strong>Press any key to continue.</strong></p>",
     };
     timeline.push(welcome);
+  
+      var instructions = {
+        type: "html-keyboard-response",
+        stimulus: "<p><strong><u>INSTRUCTIONS</u></strong></p>" + "<p>A fixation cross will appear in the center of your screen followed by a word. The word will then change to either the correct past tense or an incorrect past tense.</p>" +
+          "<br>If the word is the <strong>correct past tense</strong> of the first word (for example, jump and \"jumped\"), press the F key. If the word is an <strong>incorrect past tense</strong>, press the J key.</p>" + "<p><strong>Move as quickly as you can without losing accuracy.</strong></p>" + "<br><strong>When you're ready, place your fingers on the F and J keys.</p>" + "<p style = 'font-size: 12px;'><strong>Press any key to begin the practice test.</p>",
+        post_trial_gap: 1250,};
+     
+      timeline.push(instructions);
 
-    var instructions = {
-      type: "html-keyboard-response",
-      stimulus: "<p><strong><u>INSTRUCTIONS</u></strong></p>" + "<p>You'll be given a word in the following format:</p>" +
-          "<p><strong>jumping</strong></p>" +
-          "<br>If the presented word is a <strong>real word</strong>, press the F key <strong>as fast as you can</strong>.</p>" +
-          "<p>If the presented word is <strong>not a real word</strong>, press the J key <strong>as fast as you can</strong>.</p>" +
-          "<br>When you're ready, place your fingers on the F and J keys.</br>" +
-          "<p style = 'font-size: 12px;'><strong>Press any key to begin.</strong></br>",
-           post_trial_gap: 1250,
+    var practice_fixation = {
+      type: 'html-keyboard-response',
+      //stimulus: "<p><strong>+</strong></p>" + "<p style = 'color:White; font-size: 24px;'>ooo</p>",
+      stimulus: "<p><strong>+</strong></p>",
+      choices: jsPsych.NO_KEYS,
+      //prompt: "Press F for correct word and J for not the correct word.",
+      prompt: 
+      	  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>incorrect past tense</strong></p></div>" +
+          "</div>",
+      trial_duration: function() {
+        return jsPsych.randomization.sampleWithoutReplacement([1000], 1)[0];
+      }
     };
-    timeline.push(instructions);
-
     
-    //test stimuli data. Separated into 5 groups depending on inflection class (test_stimuli_one is all stimuli with an inflection class between 0 and 10, test_stimuli_two between 10 and 20, etc.)
-    var test_stimuli_one = [
-{ stimulus: "<strong>applaught</strong>" },
-{ stimulus: "<strong>bood</strong>" },
-{ stimulus: "<strong>belought</strong>" },
-{ stimulus: "<strong>buck</strong>" },
-{ stimulus: "<strong>blound</strong>" },
-{ stimulus: "<strong>bot</strong>" },
-{ stimulus: "<strong>brood</strong>" },
-{ stimulus: "<strong>belge</strong>" },
-{ stimulus: "<strong>belk</strong>" },
-{ stimulus: "<strong>camefort</strong>" },
-{ stimulus: "<strong>commood</strong>" },
-{ stimulus: "<strong>compold</strong>" },
-{ stimulus: "<strong>compaught</strong>" },
-{ stimulus: "<strong>compiot</strong>" },
-{ stimulus: "<strong>conselt</strong>" },
-{ stimulus: "<strong>convelse</strong>" },
-{ stimulus: "<strong>craught</strong>" },
-{ stimulus: "<strong>decrawt</strong>" },
-{ stimulus: "<strong>defaught</strong>" },
-{ stimulus: "<strong>demood</strong>" },
-{ stimulus: "<strong>denaught</strong>" },
-{ stimulus: "<strong>disbood</strong>" },
-{ stimulus: "<strong>dispold</strong>" },
-{ stimulus: "<strong>divelge</strong>" },
-{ stimulus: "<strong>drame</strong>" },
-{ stimulus: "<strong>dwold</strong>" },
-{ stimulus: "<strong>engelf</strong>" },
-{ stimulus: "<strong>excold</strong>" },
-{ stimulus: "<strong>expund</strong>" },
-{ stimulus: "<strong>expold</strong>" },
-{ stimulus: "<strong>flaught</strong>" },
-{ stimulus: "<strong>frought</strong>" },
-{ stimulus: "<strong>gelp</strong>" },
-{ stimulus: "<strong>hood</strong>" },
-{ stimulus: "<strong>huck</strong>" },
-{ stimulus: "<strong>hame</strong>" },
-{ stimulus: "<strong>impold</strong>" },
-{ stimulus: "<strong>implaught</strong>" },
-{ stimulus: "<strong>indelge</strong>" },
-{ stimulus: "<strong>inselt</strong>" },
-{ stimulus: "<strong>lood</strong>" },
-{ stimulus: "<strong>luck</strong>" },
-{ stimulus: "<strong>lucken</strong>" },
-{ stimulus: "<strong>lot</strong>" },
-{ stimulus: "<strong>lell</strong>" },
-{ stimulus: "<strong>misspold</strong>" },
-{ stimulus: "<strong>melch</strong>" },
-{ stimulus: "<strong>plamet</strong>" },
-{ stimulus: "<strong>plaught</strong>" },
-{ stimulus: "<strong>pollot</strong>" },
-{ stimulus: "<strong>propold</strong>" },
-{ stimulus: "<strong>prought</strong>" },
-{ stimulus: "<strong>quold</strong>" },
-{ stimulus: "<strong>recrot</strong>" },
-{ stimulus: "<strong>relaught</strong>" },
-{ stimulus: "<strong>remoond</strong>" },
-{ stimulus: "<strong>remound</strong>" },
-{ stimulus: "<strong>repold</strong>" },
-{ stimulus: "<strong>replought</strong>" },
-{ stimulus: "<strong>repelse</strong>" },
-{ stimulus: "<strong>reselt</strong>" },
-{ stimulus: "<strong>retrought</strong>" },
-{ stimulus: "<strong>salot</strong>" },
-{ stimulus: "<strong>scot</strong>" },
-{ stimulus: "<strong>scelpt</strong>" },
-{ stimulus: "<strong>shold</strong>" },
-{ stimulus: "<strong>smold</strong>" },
-{ stimulus: "<strong>spold</strong>" },
-{ stimulus: "<strong>spuck</strong>" },
-{ stimulus: "<strong>spaught</strong>" },
-{ stimulus: "<strong>strood</strong>" },
-{ stimulus: "<strong>strame</strong>" },
-{ stimulus: "<strong>succame</strong>" },
-{ stimulus: "<strong>sot</strong>" },
-{ stimulus: "<strong>selk</strong>" },
-{ stimulus: "<strong>supplought</strong>" },
-{ stimulus: "<strong>swold</strong>" },
-{ stimulus: "<strong>thame</strong>" },
-{ stimulus: "<strong>taught</strong>" },
-{ stimulus: "<strong>tramepet</strong>" },
-{ stimulus: "<strong>trought</strong>" },
-{ stimulus: "<strong>untought</strong>" },
-{ stimulus: "<strong>uprot</strong>" },
-{ stimulus: "<strong>vaught</strong>" },
-{ stimulus: "<strong>yold</strong>" },
+
+    var practice_test_stimuli = [
+      { stimulus: "<p>to jump</p>" + "<p style = 'font-size: 24px;'><strong>jumped</strong></p>" },
+      { stimulus: "<p>to paint</p>" + "<p style = 'font-size: 24px;'><strong>painted</strong></p>" },
+      { stimulus: "<p>to climb</p>" + "<p style = 'font-size: 24px;'><strong>clomb</strong></p>" },
+      { stimulus: "<p>to seek</p>" + "<p style = 'font-size: 24px;'><strong>sought</strong></p>" },
+      { stimulus: "<p>to fly</p>" + "<p style = 'font-size: 24px;'><strong>flewwed</strong></p>" },
+      { stimulus: "<p>to quit</p>" + "<p style = 'font-size: 24px;'><strong>quought</strong></p>"},
+      { stimulus: "<p>to smile</p>" + "<p style = 'font-size: 24px;'><strong>xpkyz</strong></p>"},
+      { stimulus: "<p>to open</p>" + "<p style = 'font-size: 24px;'><strong>opened</strong></p>"},
+      { stimulus: "<p>to kick</p>" + "<p style = 'font-size: 24px;'><strong>keecked</strong></p>" },
+      { stimulus: "<p>to sing</p>" + "<p style = 'font-size: 24px;'><strong>sung</strong></p>"},
     ];
 
-    var test_stimuli_two = [
-{ stimulus: "<strong>abode</strong>" },
-{ stimulus: "<strong>abite</strong>" },
-{ stimulus: "<strong>abount</strong>" },
-{ stimulus: "<strong>accort</strong>" },
-{ stimulus: "<strong>accose</strong>" },
-{ stimulus: "<strong>oche</strong>" },
-{ stimulus: "<strong>acheft</strong>" },
-{ stimulus: "<strong>achove</strong>" },
-{ stimulus: "<strong>adewpt</strong>" },
-{ stimulus: "<strong>agrow</strong>" },
-{ stimulus: "<strong>alogn</strong>" },
-{ stimulus: "<strong>alloot</strong>" },
-{ stimulus: "<strong>alloot</strong>" },
-{ stimulus: "<strong>ament</strong>" },
-{ stimulus: "<strong>amose</strong>" },
-{ stimulus: "<strong>appelt</strong>" },
-{ stimulus: "<strong>appoal</strong>" },
-{ stimulus: "<strong>appent</strong>" },
-{ stimulus: "<strong>applaught</strong>" },
-{ stimulus: "<strong>approze</strong>" },
-{ stimulus: "<strong>oorch</strong>" },
-{ stimulus: "<strong>arrose</strong>" },
-{ stimulus: "<strong>arrove</strong>" },
-{ stimulus: "<strong>ascrobe</strong>" },
-{ stimulus: "<strong>aspore</strong>" },
-{ stimulus: "<strong>assogne</strong>" },
-{ stimulus: "<strong>astount</strong>" },
-{ stimulus: "<strong>attaught</strong>" },
-{ stimulus: "<strong>attent</strong>" },
-{ stimulus: "<strong>avoit</strong>" },
-{ stimulus: "<strong>awart</strong>" },
-{ stimulus: "<strong>boke</strong>" },
-{ stimulus: "<strong>bant</strong>" },
-{ stimulus: "<strong>boorge</strong>" },
-{ stimulus: "<strong>bode</strong>" },
-{ stimulus: "<strong>beamt</strong>" },
-{ stimulus: "<strong>bome</strong>" },
-{ stimulus: "<strong>bole</strong>" },
-{ stimulus: "<strong>bept</strong>" },
-{ stimulus: "<strong>bope</strong>" },
-{ stimulus: "<strong>befrient</strong>" },
-{ stimulus: "<strong>beheat</strong>" },
-{ stimulus: "<strong>beholt</strong>" },
-{ stimulus: "<strong>beleft</strong>" },
-{ stimulus: "<strong>belove</strong>" },
-{ stimulus: "<strong>bequoth</strong>" },
-{ stimulus: "<strong>besoach</strong>" },
-{ stimulus: "<strong>besoge</strong>" },
-{ stimulus: "<strong>boke</strong>" },
-{ stimulus: "<strong>blasphemt</strong>" },
-{ stimulus: "<strong>blasphome</strong>" },
-{ stimulus: "<strong>bloach</strong>" },
-{ stimulus: "<strong>bload</strong>" },
-{ stimulus: "<strong>bleet</strong>" },
-{ stimulus: "<strong>blent</strong>" },
-{ stimulus: "<strong>blote</strong>" },
-{ stimulus: "<strong>blownd</strong>" },
-{ stimulus: "<strong>blint</strong>" },
-{ stimulus: "<strong>blank</strong>" },
-{ stimulus: "<strong>bloock</strong>" },
-{ stimulus: "<strong>bloot</strong>" },
-{ stimulus: "<strong>bont</strong>" },
-{ stimulus: "<strong>boond</strong>" },
-{ stimulus: "<strong>boze</strong>" },
-{ stimulus: "<strong>bootch</strong>" },
-{ stimulus: "<strong>bount</strong>" },
-{ stimulus: "<strong>boox</strong>" },
-{ stimulus: "<strong>brait</strong>" },
-{ stimulus: "<strong>brant</strong>" },
-{ stimulus: "<strong>breat</strong>" },
-{ stimulus: "<strong>brothe</strong>" },
-{ stimulus: "<strong>brobe</strong>" },
-{ stimulus: "<strong>bruck</strong>" },
-{ stimulus: "<strong>brofe</strong>" },
-{ stimulus: "<strong>brang</strong>" },
-{ stimulus: "<strong>broot</strong>" },
-{ stimulus: "<strong>brose</strong>" },
-{ stimulus: "<strong>coke</strong>" },
-{ stimulus: "<strong>carent</strong>" },
-{ stimulus: "<strong>carone</strong>" },
-{ stimulus: "<strong>coorpet</strong>" },
-{ stimulus: "<strong>coose</strong>" },
-{ stimulus: "<strong>coase</strong>" },
-{ stimulus: "<strong>chopen</strong>" },
-{ stimulus: "<strong>chote</strong>" },
-{ stimulus: "<strong>chode</strong>" },
-{ stimulus: "<strong>chite</strong>" },
-{ stimulus: "<strong>chome</strong>" },
-{ stimulus: "<strong>chun</strong>" },
-{ stimulus: "<strong>chump</strong>" },
-{ stimulus: "<strong>choop</strong>" },
-{ stimulus: "<strong>cunch</strong>" },
-{ stimulus: "<strong>cleft</strong>" },
-{ stimulus: "<strong>clove</strong>" },
-{ stimulus: "<strong>cluck</strong>" },
-{ stimulus: "<strong>clomb</strong>" },
-{ stimulus: "<strong>clunch</strong>" },
-{ stimulus: "<strong>cloock</strong>" },
-{ stimulus: "<strong>cloog</strong>" },
-{ stimulus: "<strong>clooset</strong>" },
-{ stimulus: "<strong>coombat</strong>" },
-{ stimulus: "<strong>commant</strong>" },
-{ stimulus: "<strong>comment</strong>" },
-{ stimulus: "<strong>compote</strong>" },
-{ stimulus: "<strong>compole</strong>" },
-{ stimulus: "<strong>complote</strong>" },
-{ stimulus: "<strong>comprose</strong>" },
-{ stimulus: "<strong>coon</strong>" },
-{ stimulus: "<strong>concelt</strong>" },
-{ stimulus: "<strong>concoal</strong>" },
-{ stimulus: "<strong>concode</strong>" },
-{ stimulus: "<strong>conceft</strong>" },
-{ stimulus: "<strong>concove</strong>" },
-{ stimulus: "<strong>conclute</strong>" },
-{ stimulus: "<strong>concooct</strong>" },
-{ stimulus: "<strong>confode</strong>" },
-{ stimulus: "<strong>confite</strong>" },
-{ stimulus: "<strong>confone</strong>" },
-{ stimulus: "<strong>congelt</strong>" },
-{ stimulus: "<strong>congoal</strong>" },
-{ stimulus: "<strong>consogne</strong>" },
-{ stimulus: "<strong>construct</strong>" },
-{ stimulus: "<strong>content</strong>" },
-{ stimulus: "<strong>controve</strong>" },
-{ stimulus: "<strong>convent</strong>" },
-{ stimulus: "<strong>convone</strong>" },
-{ stimulus: "<strong>coonvert</strong>" },
-{ stimulus: "<strong>convunce</strong>" },
-{ stimulus: "<strong>corrote</strong>" },
-{ stimulus: "<strong>coost</strong>" },
-{ stimulus: "<strong>coogh</strong>" },
-{ stimulus: "<strong>cremt</strong>" },
-{ stimulus: "<strong>croam</strong>" },
-{ stimulus: "<strong>crose</strong>" },
-{ stimulus: "<strong>croap</strong>" },
-{ stimulus: "<strong>crunge</strong>" },
-{ stimulus: "<strong>crowt</strong>" },
-{ stimulus: "<strong>croze</strong>" },
-{ stimulus: "<strong>deceft</strong>" },
-{ stimulus: "<strong>decove</strong>" },
-{ stimulus: "<strong>decode</strong>" },
-{ stimulus: "<strong>decite</strong>" },
-{ stimulus: "<strong>declone</strong>" },
-{ stimulus: "<strong>decrose</strong>" },
-{ stimulus: "<strong>decrow</strong>" },
-{ stimulus: "<strong>deamt</strong>" },
-{ stimulus: "<strong>dome</strong>" },
-{ stimulus: "<strong>defote</strong>" },
-{ stimulus: "<strong>defent</strong>" },
-{ stimulus: "<strong>defone</strong>" },
-{ stimulus: "<strong>defraut</strong>" },
-{ stimulus: "<strong>degrate</strong>" },
-{ stimulus: "<strong>delote</strong>" },
-{ stimulus: "<strong>delote</strong>" },
-{ stimulus: "<strong>delute</strong>" },
-{ stimulus: "<strong>demant</strong>" },
-{ stimulus: "<strong>demeant</strong>" },
-{ stimulus: "<strong>demone</strong>" },
-{ stimulus: "<strong>depent</strong>" },
-{ stimulus: "<strong>deplote</strong>" },
-{ stimulus: "<strong>depoosit</strong>" },
-{ stimulus: "<strong>deprove</strong>" },
-{ stimulus: "<strong>derode</strong>" },
-{ stimulus: "<strong>derite</strong>" },
-{ stimulus: "<strong>derove</strong>" },
-{ stimulus: "<strong>descrobe</strong>" },
-{ stimulus: "<strong>desogne</strong>" },
-{ stimulus: "<strong>detaught</strong>" },
-{ stimulus: "<strong>divose</strong>" },
-{ stimulus: "<strong>disbant</strong>" },
-{ stimulus: "<strong>disguose</strong>" },
-{ stimulus: "<strong>disloodge</strong>" },
-{ stimulus: "<strong>dispaught</strong>" },
-{ stimulus: "<strong>displose</strong>" },
-{ stimulus: "<strong>dissoolve</strong>" },
-{ stimulus: "<strong>dissuate</strong>" },
-{ stimulus: "<strong>divode</strong>" },
-{ stimulus: "<strong>divite</strong>" },
-{ stimulus: "<strong>divone</strong>" },
-{ stimulus: "<strong>doodge</strong>" },
-{ stimulus: "<strong>dreat</strong>" },
-{ stimulus: "<strong>drome</strong>" },
-{ stimulus: "<strong>dwundle</strong>" },
-{ stimulus: "<strong>oase</strong>" },
-{ stimulus: "<strong>elute</strong>" },
-{ stimulus: "<strong>enscoonce</strong>" },
-{ stimulus: "<strong>entouce</strong>" },
-{ stimulus: "<strong>erote</strong>" },
-{ stimulus: "<strong>estempt</strong>" },
-{ stimulus: "<strong>estome</strong>" },
-{ stimulus: "<strong>evate</strong>" },
-{ stimulus: "<strong>evuct</strong>" },
-{ stimulus: "<strong>evunce</strong>" },
-{ stimulus: "<strong>excode</strong>" },
-{ stimulus: "<strong>exceet</strong>" },
-{ stimulus: "<strong>excote</strong>" },
-{ stimulus: "<strong>exclute</strong>" },
-{ stimulus: "<strong>expant</strong>" },
-{ stimulus: "<strong>expent</strong>" },
-{ stimulus: "<strong>expore</strong>" },
-{ stimulus: "<strong>explote</strong>" },
-{ stimulus: "<strong>expount</strong>" },
-{ stimulus: "<strong>extent</strong>" },
-{ stimulus: "<strong>exute</strong>" },
-{ stimulus: "<strong>foke</strong>" },
-{ stimulus: "<strong>foorm</strong>" },
-{ stimulus: "<strong>foast</strong>" },
-{ stimulus: "<strong>fode</strong>" },
-{ stimulus: "<strong>fole</strong>" },
-{ stimulus: "<strong>fent</strong>" },
-{ stimulus: "<strong>funger</strong>" },
-{ stimulus: "<strong>fux</strong>" },
-{ stimulus: "<strong>floke</strong>" },
-{ stimulus: "<strong>fluck</strong>" },
-{ stimulus: "<strong>flucker</strong>" },
-{ stimulus: "<strong>flunch</strong>" },
-{ stimulus: "<strong>floock</strong>" },
-{ stimulus: "<strong>floog</strong>" },
-{ stimulus: "<strong>floop</strong>" },
-{ stimulus: "<strong>folt</strong>" },
-{ stimulus: "<strong>fro</strong>" },
-{ stimulus: "<strong>froten</strong>" },
-{ stimulus: "<strong>frewlic</strong>" },
-{ stimulus: "<strong>fioze</strong>" },
-{ stimulus: "<strong>guggle</strong>" },
-{ stimulus: "<strong>gleamt</strong>" },
-{ stimulus: "<strong>glome</strong>" },
-{ stimulus: "<strong>gleant</strong>" },
-{ stimulus: "<strong>glone</strong>" },
-{ stimulus: "<strong>glode</strong>" },
-{ stimulus: "<strong>glite</strong>" },
-{ stimulus: "<strong>goobble</strong>" },
-{ stimulus: "<strong>goolf</strong>" },
-{ stimulus: "<strong>goossip</strong>" },
-{ stimulus: "<strong>grote</strong>" },
-{ stimulus: "<strong>greft</strong>" },
-{ stimulus: "<strong>grove</strong>" },
-{ stimulus: "<strong>grun</strong>" },
-{ stimulus: "<strong>groovel</strong>" },
-{ stimulus: "<strong>guoord</strong>" },
-{ stimulus: "<strong>guart</strong>" },
-{ stimulus: "<strong>guode</strong>" },
-{ stimulus: "<strong>hant</strong>" },
-{ stimulus: "<strong>haught</strong>" },
-{ stimulus: "<strong>hote</strong>" },
-{ stimulus: "<strong>hoten</strong>" },
-{ stimulus: "<strong>hode</strong>" },
-{ stimulus: "<strong>hite</strong>" },
-{ stimulus: "<strong>hoke</strong>" },
-{ stimulus: "<strong>hunder</strong>" },
-{ stimulus: "<strong>hunge</strong>" },
-{ stimulus: "<strong>hoart</strong>" },
-{ stimulus: "<strong>hubble</strong>" },
-{ stimulus: "<strong>holt</strong>" },
-{ stimulus: "<strong>huller</strong>" },
-{ stimulus: "<strong>hoop</strong>" },
-{ stimulus: "<strong>ignote</strong>" },
-{ stimulus: "<strong>imbet</strong>" },
-{ stimulus: "<strong>imbobe</strong>" },
-{ stimulus: "<strong>impouch</strong>" },
-{ stimulus: "<strong>impode</strong>" },
-{ stimulus: "<strong>impete</strong>" },
-{ stimulus: "<strong>impount</strong>" },
-{ stimulus: "<strong>unch</strong>" },
-{ stimulus: "<strong>unch</strong>" },
-{ stimulus: "<strong>inclone</strong>" },
-{ stimulus: "<strong>inclute</strong>" },
-{ stimulus: "<strong>incrose</strong>" },
-{ stimulus: "<strong>indowt</strong>" },
-{ stimulus: "<strong>influct</strong>" },
-{ stimulus: "<strong>infrunge</strong>" },
-{ stimulus: "<strong>inquore</strong>" },
-{ stimulus: "<strong>inscrobe</strong>" },
-{ stimulus: "<strong>insote</strong>" },
-{ stimulus: "<strong>inspore</strong>" },
-{ stimulus: "<strong>intent</strong>" },
-{ stimulus: "<strong>introgue</strong>" },
-{ stimulus: "<strong>intrute</strong>" },
-{ stimulus: "<strong>invate</strong>" },
-{ stimulus: "<strong>invote</strong>" },
-{ stimulus: "<strong>junx</strong>" },
-{ stimulus: "<strong>jove</strong>" },
-{ stimulus: "<strong>joog</strong>" },
-{ stimulus: "<strong>joostle</strong>" },
-{ stimulus: "<strong>joot</strong>" },
-{ stimulus: "<strong>kelt</strong>" },
-{ stimulus: "<strong>kole</strong>" },
-{ stimulus: "<strong>knode</strong>" },
-{ stimulus: "<strong>kneet</strong>" },
-{ stimulus: "<strong>knole</strong>" },
-{ stimulus: "<strong>lant</strong>" },
-{ stimulus: "<strong>laught</strong>" },
-{ stimulus: "<strong>laught</strong>" },
-{ stimulus: "<strong>loak</strong>" },
-{ stimulus: "<strong>lope</strong>" },
-{ stimulus: "<strong>lose</strong>" },
-{ stimulus: "<strong>love</strong>" },
-{ stimulus: "<strong>lote</strong>" },
-{ stimulus: "<strong>loten</strong>" },
-{ stimulus: "<strong>loak</strong>" },
-{ stimulus: "<strong>loken</strong>" },
-{ stimulus: "<strong>lunger</strong>" },
-{ stimulus: "<strong>lunk</strong>" },
-{ stimulus: "<strong>love</strong>" },
-{ stimulus: "<strong>loock</strong>" },
-{ stimulus: "<strong>loodge</strong>" },
-{ stimulus: "<strong>loze</strong>" },
-{ stimulus: "<strong>moke</strong>" },
-{ stimulus: "<strong>malogn</strong>" },
-{ stimulus: "<strong>moorch</strong>" },
-{ stimulus: "<strong>moork</strong>" },
-{ stimulus: "<strong>massuge</strong>" },
-{ stimulus: "<strong>maught</strong>" },
-{ stimulus: "<strong>mote</strong>" },
-{ stimulus: "<strong>ment</strong>" },
-{ stimulus: "<strong>munce</strong>" },
-{ stimulus: "<strong>mungle</strong>" },
-{ stimulus: "<strong>misguode</strong>" },
-{ stimulus: "<strong>misguite</strong>" },
-{ stimulus: "<strong>misload</strong>" },
-{ stimulus: "<strong>misleat</strong>" },
-{ stimulus: "<strong>mistoke</strong>" },
-{ stimulus: "<strong>mistrote</strong>" },
-{ stimulus: "<strong>mux</strong>" },
-{ stimulus: "<strong>moock</strong>" },
-{ stimulus: "<strong>molt</strong>" },
-{ stimulus: "<strong>moop</strong>" },
-{ stimulus: "<strong>myose</strong>" },
-{ stimulus: "<strong>node</strong>" },
-{ stimulus: "<strong>neet</strong>" },
-{ stimulus: "<strong>nood</strong>" },
-{ stimulus: "<strong>nootch</strong>" },
-{ stimulus: "<strong>obloge</strong>" },
-{ stimulus: "<strong>offent</strong>" },
-{ stimulus: "<strong>oase</strong>" },
-{ stimulus: "<strong>opone</strong>" },
-{ stimulus: "<strong>oopt</strong>" },
-{ stimulus: "<strong>parate</strong>" },
-{ stimulus: "<strong>paught</strong>" },
-{ stimulus: "<strong>pept</strong>" },
-{ stimulus: "<strong>pope</strong>" },
-{ stimulus: "<strong>perceft</strong>" },
-{ stimulus: "<strong>percove</strong>" },
-{ stimulus: "<strong>persuate</strong>" },
-{ stimulus: "<strong>perose</strong>" },
-{ stimulus: "<strong>pervate</strong>" },
-{ stimulus: "<strong>puck</strong>" },
-{ stimulus: "<strong>pucket</strong>" },
-{ stimulus: "<strong>polot</strong>" },
-{ stimulus: "<strong>pun</strong>" },
-{ stimulus: "<strong>punch</strong>" },
-{ stimulus: "<strong>pung</strong>" },
-{ stimulus: "<strong>porate</strong>" },
-{ stimulus: "<strong>pload</strong>" },
-{ stimulus: "<strong>pleat</strong>" },
-{ stimulus: "<strong>ploop</strong>" },
-{ stimulus: "<strong>poocket</strong>" },
-{ stimulus: "<strong>poloce</strong>" },
-{ stimulus: "<strong>pount</strong>" },
-{ stimulus: "<strong>proach</strong>" },
-{ stimulus: "<strong>precode</strong>" },
-{ stimulus: "<strong>precete</strong>" },
-{ stimulus: "<strong>preclute</strong>" },
-{ stimulus: "<strong>preduct</strong>" },
-{ stimulus: "<strong>prent</strong>" },
-{ stimulus: "<strong>prone</strong>" },
-{ stimulus: "<strong>prescrobe</strong>" },
-{ stimulus: "<strong>presode</strong>" },
-{ stimulus: "<strong>presite</strong>" },
-{ stimulus: "<strong>pretent</strong>" },
-{ stimulus: "<strong>prome</strong>" },
-{ stimulus: "<strong>prunt</strong>" },
-{ stimulus: "<strong>procode</strong>" },
-{ stimulus: "<strong>proceet</strong>" },
-{ stimulus: "<strong>prood</strong>" },
-{ stimulus: "<strong>prot</strong>" },
-{ stimulus: "<strong>proofit</strong>" },
-{ stimulus: "<strong>proompt</strong>" },
-{ stimulus: "<strong>proop</strong>" },
-{ stimulus: "<strong>proscrobe</strong>" },
-{ stimulus: "<strong>protrute</strong>" },
-{ stimulus: "<strong>provode</strong>" },
-{ stimulus: "<strong>provite</strong>" },
-{ stimulus: "<strong>quoke</strong>" },
-{ stimulus: "<strong>quocken</strong>" },
-{ stimulus: "<strong>quowet</strong>" },
-{ stimulus: "<strong>roke</strong>" },
-{ stimulus: "<strong>roche</strong>" },
-{ stimulus: "<strong>rebount</strong>" },
-{ stimulus: "<strong>recode</strong>" },
-{ stimulus: "<strong>recete</strong>" },
-{ stimulus: "<strong>receft</strong>" },
-{ stimulus: "<strong>recove</strong>" },
-{ stimulus: "<strong>recote</strong>" },
-{ stimulus: "<strong>recort</strong>" },
-{ stimulus: "<strong>redeamt</strong>" },
-{ stimulus: "<strong>redome</strong>" },
-{ stimulus: "<strong>reft</strong>" },
-{ stimulus: "<strong>rove</strong>" },
-{ stimulus: "<strong>refole</strong>" },
-{ stimulus: "<strong>refone</strong>" },
-{ stimulus: "<strong>refant</strong>" },
-{ stimulus: "<strong>regart</strong>" },
-{ stimulus: "<strong>regoord</strong>" },
-{ stimulus: "<strong>relose</strong>" },
-{ stimulus: "<strong>releft</strong>" },
-{ stimulus: "<strong>relowve</strong>" },
-{ stimulus: "<strong>reloat</strong>" },
-{ stimulus: "<strong>remant</strong>" },
-{ stimulus: "<strong>remint</strong>" },
-{ stimulus: "<strong>remond</strong>" },
-{ stimulus: "<strong>renug</strong>" },
-{ stimulus: "<strong>repelt</strong>" },
-{ stimulus: "<strong>repole</strong>" },
-{ stimulus: "<strong>repote</strong>" },
-{ stimulus: "<strong>reprunt</strong>" },
-{ stimulus: "<strong>rescint</strong>" },
-{ stimulus: "<strong>rescund</strong>" },
-{ stimulus: "<strong>resode</strong>" },
-{ stimulus: "<strong>resite</strong>" },
-{ stimulus: "<strong>resogn</strong>" },
-{ stimulus: "<strong>resolt</strong>" },
-{ stimulus: "<strong>respoond</strong>" },
-{ stimulus: "<strong>respont</strong>" },
-{ stimulus: "<strong>restoock</strong>" },
-{ stimulus: "<strong>restruct</strong>" },
-{ stimulus: "<strong>rethunk</strong>" },
-{ stimulus: "<strong>retore</strong>" },
-{ stimulus: "<strong>retroat</strong>" },
-{ stimulus: "<strong>retreft</strong>" },
-{ stimulus: "<strong>retrove</strong>" },
-{ stimulus: "<strong>revealt</strong>" },
-{ stimulus: "<strong>revole</strong>" },
-{ stimulus: "<strong>revose</strong>" },
-{ stimulus: "<strong>revove</strong>" },
-{ stimulus: "<strong>revoolve</strong>" },
-{ stimulus: "<strong>rewart</strong>" },
-{ stimulus: "<strong>rewort</strong>" },
-{ stimulus: "<strong>rug</strong>" },
-{ stimulus: "<strong>runce</strong>" },
-{ stimulus: "<strong>rowat</strong>" },
-{ stimulus: "<strong>ropen</strong>" },
-{ stimulus: "<strong>roob</strong>" },
-{ stimulus: "<strong>roock</strong>" },
-{ stimulus: "<strong>roocket</strong>" },
-{ stimulus: "<strong>rount</strong>" },
-{ stimulus: "<strong>scalt</strong>" },
-{ stimulus: "<strong>scoor</strong>" },
-{ stimulus: "<strong>schemt</strong>" },
-{ stimulus: "<strong>schome</strong>" },
-{ stimulus: "<strong>scolt</strong>" },
-{ stimulus: "<strong>scrought</strong>" },
-{ stimulus: "<strong>scremt</strong>" },
-{ stimulus: "<strong>scrome</strong>" },
-{ stimulus: "<strong>scroch</strong>" },
-{ stimulus: "<strong>scrent</strong>" },
-{ stimulus: "<strong>scrone</strong>" },
-{ stimulus: "<strong>sealt</strong>" },
-{ stimulus: "<strong>sole</strong>" },
-{ stimulus: "<strong>secode</strong>" },
-{ stimulus: "<strong>secete</strong>" },
-{ stimulus: "<strong>sode</strong>" },
-{ stimulus: "<strong>sempt</strong>" },
-{ stimulus: "<strong>soam</strong>" },
-{ stimulus: "<strong>sept</strong>" },
-{ stimulus: "<strong>sope</strong>" },
-{ stimulus: "<strong>soze</strong>" },
-{ stimulus: "<strong>shate</strong>" },
-{ stimulus: "<strong>shoke</strong>" },
-{ stimulus: "<strong>shold</strong>" },
-{ stimulus: "<strong>shielt</strong>" },
-{ stimulus: "<strong>shoop</strong>" },
-{ stimulus: "<strong>shret</strong>" },
-{ stimulus: "<strong>shroke</strong>" },
-{ stimulus: "<strong>shrunk</strong>" },
-{ stimulus: "<strong>sode</strong>" },
-{ stimulus: "<strong>sun</strong>" },
-{ stimulus: "<strong>sung</strong>" },
-{ stimulus: "<strong>sunge</strong>" },
-{ stimulus: "<strong>sunk</strong>" },
-{ stimulus: "<strong>soze</strong>" },
-{ stimulus: "<strong>skow</strong>" },
-{ stimulus: "<strong>sloce</strong>" },
-{ stimulus: "<strong>slode</strong>" },
-{ stimulus: "<strong>slite</strong>" },
-{ stimulus: "<strong>sloog</strong>" },
-{ stimulus: "<strong>sloop</strong>" },
-{ stimulus: "<strong>sloosh</strong>" },
-{ stimulus: "<strong>smole</strong>" },
-{ stimulus: "<strong>snoke</strong>" },
-{ stimulus: "<strong>snought</strong>" },
-{ stimulus: "<strong>snoke</strong>" },
-{ stimulus: "<strong>snoze</strong>" },
-{ stimulus: "<strong>snucker</strong>" },
-{ stimulus: "<strong>snope</strong>" },
-{ stimulus: "<strong>soob</strong>" },
-{ stimulus: "<strong>spewn</strong>" },
-{ stimulus: "<strong>spode</strong>" },
-{ stimulus: "<strong>speet</strong>" },
-{ stimulus: "<strong>spoke</strong>" },
-{ stimulus: "<strong>spoot</strong>" },
-{ stimulus: "<strong>spreat</strong>" },
-{ stimulus: "<strong>sprung</strong>" },
-{ stimulus: "<strong>sprunkle</strong>" },
-{ stimulus: "<strong>sprunt</strong>" },
-{ stimulus: "<strong>squoot</strong>" },
-{ stimulus: "<strong>squoke</strong>" },
-{ stimulus: "<strong>squealt</strong>" },
-{ stimulus: "<strong>squole</strong>" },
-{ stimulus: "<strong>squoze</strong>" },
-{ stimulus: "<strong>squont</strong>" },
-{ stimulus: "<strong>stant</strong>" },
-{ stimulus: "<strong>steamt</strong>" },
-{ stimulus: "<strong>stome</strong>" },
-{ stimulus: "<strong>stelt</strong>" },
-{ stimulus: "<strong>stelt</strong>" },
-{ stimulus: "<strong>stept</strong>" },
-{ stimulus: "<strong>stope</strong>" },
-{ stimulus: "<strong>stung</strong>" },
-{ stimulus: "<strong>stoomp</strong>" },
-{ stimulus: "<strong>strant</strong>" },
-{ stimulus: "<strong>streamt</strong>" },
-{ stimulus: "<strong>strome</strong>" },
-{ stimulus: "<strong>strucken</strong>" },
-{ stimulus: "<strong>strode</strong>" },
-{ stimulus: "<strong>strite</strong>" },
-{ stimulus: "<strong>subscrobe</strong>" },
-{ stimulus: "<strong>subsode</strong>" },
-{ stimulus: "<strong>subsite</strong>" },
-{ stimulus: "<strong>succode</strong>" },
-{ stimulus: "<strong>succeet</strong>" },
-{ stimulus: "<strong>suffoce</strong>" },
-{ stimulus: "<strong>surmose</strong>" },
-{ stimulus: "<strong>surprose</strong>" },
-{ stimulus: "<strong>surrount</strong>" },
-{ stimulus: "<strong>survove</strong>" },
-{ stimulus: "<strong>suspent</strong>" },
-{ stimulus: "<strong>swewt</strong>" },
-{ stimulus: "<strong>swope</strong>" },
-{ stimulus: "<strong>swundle</strong>" },
-{ stimulus: "<strong>swope</strong>" },
-{ stimulus: "<strong>toke</strong>" },
-{ stimulus: "<strong>toche</strong>" },
-{ stimulus: "<strong>toase</strong>" },
-{ stimulus: "<strong>temt</strong>" },
-{ stimulus: "<strong>tome</strong>" },
-{ stimulus: "<strong>tothe</strong>" },
-{ stimulus: "<strong>tent</strong>" },
-{ stimulus: "<strong>thank</strong>" },
-{ stimulus: "<strong>threat</strong>" },
-{ stimulus: "<strong>throve</strong>" },
-{ stimulus: "<strong>throob</strong>" },
-{ stimulus: "<strong>tuck</strong>" },
-{ stimulus: "<strong>tucket</strong>" },
-{ stimulus: "<strong>tuckle</strong>" },
-{ stimulus: "<strong>tode</strong>" },
-{ stimulus: "<strong>tite</strong>" },
-{ stimulus: "<strong>toghten</strong>" },
-{ stimulus: "<strong>tome</strong>" },
-{ stimulus: "<strong>tunker</strong>" },
-{ stimulus: "<strong>tunkle</strong>" },
-{ stimulus: "<strong>trate</strong>" },
-{ stimulus: "<strong>treat</strong>" },
-{ stimulus: "<strong>trote</strong>" },
-{ stimulus: "<strong>truck</strong>" },
-{ stimulus: "<strong>truckle</strong>" },
-{ stimulus: "<strong>trugger</strong>" },
-{ stimulus: "<strong>troot</strong>" },
-{ stimulus: "<strong>twoke</strong>" },
-{ stimulus: "<strong>twone</strong>" },
-{ stimulus: "<strong>twunkle</strong>" },
-{ stimulus: "<strong>tope</strong>" },
-{ stimulus: "<strong>unfolt</strong>" },
-{ stimulus: "<strong>unhunge</strong>" },
-{ stimulus: "<strong>unlosh</strong>" },
-{ stimulus: "<strong>unloat</strong>" },
-{ stimulus: "<strong>unloocke</strong>" },
-{ stimulus: "<strong>unwint</strong>" },
-{ stimulus: "<strong>upgrate</strong>" },
-{ stimulus: "<strong>upholt</strong>" },
-{ stimulus: "<strong>voit</strong>" },
-{ stimulus: "<strong>voomit</strong>" },
-{ stimulus: "<strong>wunt</strong>" },
-{ stimulus: "<strong>wart</strong>" },
-{ stimulus: "<strong>wutch</strong>" },
-{ stimulus: "<strong>weant</strong>" },
-{ stimulus: "<strong>wone</strong>" },
-{ stimulus: "<strong>weft</strong>" },
-{ stimulus: "<strong>wope</strong>" },
-{ stimulus: "<strong>welt</strong>" },
-{ stimulus: "<strong>whoze</strong>" },
-{ stimulus: "<strong>whone</strong>" },
-{ stimulus: "<strong>whoten</strong>" },
-{ stimulus: "<strong>woden</strong>" },
-{ stimulus: "<strong>wold</strong>" },
-{ stimulus: "<strong>wielt</strong>" },
-{ stimulus: "<strong>wunce</strong>" },
-{ stimulus: "<strong>wung</strong>" },
-{ stimulus: "<strong>wunk</strong>" },
-{ stimulus: "<strong>wope</strong>" },
-{ stimulus: "<strong>withholt</strong>" },
-{ stimulus: "<strong>withstant</strong>" },
-{ stimulus: "<strong>wozen</strong>" },
-{ stimulus: "<strong>wroke</strong>" },
-{ stimulus: "<strong>wruggle</strong>" },
-{ stimulus: "<strong>wrung</strong>" },
-{ stimulus: "<strong>wrankle</strong>" },
-{ stimulus: "<strong>yoald</strong>" },
-{ stimulus: "<strong>yielt</strong>" },
-    ];
+    var practice_test_1 = {
+    type: 'same-different-html',
+    stimuli: ['<p>to jump</p>', '<p>jumped</p>'],
+    //timing_first_stim: 1000,
+    second_stim_duration: null,
+    //prompt: "Press F for the correct word and J for not the correct word.",
 
-    var test_stimuli_three = [
-{ stimulus: "<strong>abot</strong>" },
-{ stimulus: "<strong>abid</strong>" },
-{ stimulus: "<strong>ade</strong>" },
-{ stimulus: "<strong>agraw</strong>" },
-{ stimulus: "<strong>alled</strong>" },
-{ stimulus: "<strong>applay</strong>" },
-{ stimulus: "<strong>awade</strong>" },
-{ stimulus: "<strong>bade</strong>" },
-{ stimulus: "<strong>belay</strong>" },
-{ stimulus: "<strong>besaught</strong>" },
-{ stimulus: "<strong>besaught</strong>" },
-{ stimulus: "<strong>bespead</strong>" },
-{ stimulus: "<strong>bestew</strong>" },
-{ stimulus: "<strong>bot</strong>" },
-{ stimulus: "<strong>betread</strong>" },
-{ stimulus: "<strong>bide</strong>" },
-{ stimulus: "<strong>blaught</strong>" },
-{ stimulus: "<strong>blit</strong>" },
-{ stimulus: "<strong>blaught</strong>" },
-{ stimulus: "<strong>blod</strong>" },
-{ stimulus: "<strong>brid</strong>" },
-{ stimulus: "<strong>cade</strong>" },
-{ stimulus: "<strong>chid</strong>" },
-{ stimulus: "<strong>clid</strong>" },
-{ stimulus: "<strong>clod</strong>" },
-{ stimulus: "<strong>complay</strong>" },
-{ stimulus: "<strong>confid</strong>" },
-{ stimulus: "<strong>conved</strong>" },
-{ stimulus: "<strong>croad</strong>" },
-{ stimulus: "<strong>cray</strong>" },
-{ stimulus: "<strong>decid</strong>" },
-{ stimulus: "<strong>decraw</strong>" },
-{ stimulus: "<strong>decray</strong>" },
-{ stimulus: "<strong>defred</strong>" },
-{ stimulus: "<strong>defaye</strong>" },
-{ stimulus: "<strong>delaid</strong>" },
-{ stimulus: "<strong>delaught</strong>" },
-{ stimulus: "<strong>delit</strong>" },
-{ stimulus: "<strong>denay</strong>" },
-{ stimulus: "<strong>derid</strong>" },
-{ stimulus: "<strong>dismaid</strong>" },
-{ stimulus: "<strong>displaid</strong>" },
-{ stimulus: "<strong>divid</strong>" },
-{ stimulus: "<strong>excaught</strong>" },
-{ stimulus: "<strong>excit</strong>" },
-{ stimulus: "<strong>fade</strong>" },
-{ stimulus: "<strong>flade</strong>" },
-{ stimulus: "<strong>flid</strong>" },
-{ stimulus: "<strong>flod</strong>" },
-{ stimulus: "<strong>flew</strong>" },
-{ stimulus: "<strong>flay</strong>" },
-{ stimulus: "<strong>fraid</strong>" },
-{ stimulus: "<strong>fraw</strong>" },
-{ stimulus: "<strong>frot</strong>" },
-{ stimulus: "<strong>friten</strong>" },
-{ stimulus: "<strong>frolid</strong>" },
-{ stimulus: "<strong>fray</strong>" },
-{ stimulus: "<strong>glid</strong>" },
-{ stimulus: "<strong>guid</strong>" },
-{ stimulus: "<strong>hitten</strong>" },
-{ stimulus: "<strong>hide</strong>" },
-{ stimulus: "<strong>ignaught</strong>" },
-{ stimulus: "<strong>ignit</strong>" },
-{ stimulus: "<strong>impaught</strong>" },
-{ stimulus: "<strong>implay</strong>" },
-{ stimulus: "<strong>insaught</strong>" },
-{ stimulus: "<strong>incit</strong>" },
-{ stimulus: "<strong>indaught</strong>" },
-{ stimulus: "<strong>indit</strong>" },
-{ stimulus: "<strong>invaught</strong>" },
-{ stimulus: "<strong>invit</strong>" },
-{ stimulus: "<strong>jot</strong>" },
-{ stimulus: "<strong>lead</strong>" },
-{ stimulus: "<strong>laught</strong>" },
-{ stimulus: "<strong>laught</strong>" },
-{ stimulus: "<strong>liten</strong>" },
-{ stimulus: "<strong>lide</strong>" },
-{ stimulus: "<strong>lod</strong>" },
-{ stimulus: "<strong>mard</strong>" },
-{ stimulus: "<strong>misguid</strong>" },
-{ stimulus: "<strong>mistade</strong>" },
-{ stimulus: "<strong>not</strong>" },
-{ stimulus: "<strong>obaid</strong>" },
-{ stimulus: "<strong>offsot</strong>" },
-{ stimulus: "<strong>oowe</strong>" },
-{ stimulus: "<strong>pehd</strong>" },
-{ stimulus: "<strong>paught</strong>" },
-{ stimulus: "<strong>pid</strong>" },
-{ stimulus: "<strong>plaid</strong>" },
-{ stimulus: "<strong>play</strong>" },
-{ stimulus: "<strong>pode</strong>" },
-{ stimulus: "<strong>prought</strong>" },
-{ stimulus: "<strong>presid</strong>" },
-{ stimulus: "<strong>pred</strong>" },
-{ stimulus: "<strong>provid</strong>" },
-{ stimulus: "<strong>pray</strong>" },
-{ stimulus: "<strong>quade</strong>" },
-{ stimulus: "<strong>rade</strong>" },
-{ stimulus: "<strong>rought</strong>" },
-{ stimulus: "<strong>recaught</strong>" },
-{ stimulus: "<strong>recit</strong>" },
-{ stimulus: "<strong>reed</strong>" },
-{ stimulus: "<strong>regraught</strong>" },
-{ stimulus: "<strong>relay</strong>" },
-{ stimulus: "<strong>replay</strong>" },
-{ stimulus: "<strong>resought</strong>" },
-{ stimulus: "<strong>resid</strong>" },
-{ stimulus: "<strong>restod</strong>" },
-{ stimulus: "<strong>retray</strong>" },
-{ stimulus: "<strong>rewraught</strong>" },
-{ stimulus: "<strong>rewrit</strong>" },
-{ stimulus: "<strong>rod</strong>" },
-{ stimulus: "<strong>rew</strong>" },
-{ stimulus: "<strong>scrought</strong>" },
-{ stimulus: "<strong>saught</strong>" },
-{ stimulus: "<strong>shade</strong>" },
-{ stimulus: "<strong>shried</strong>" },
-{ stimulus: "<strong>sid</strong>" },
-{ stimulus: "<strong>skaw</strong>" },
-{ stimulus: "<strong>slaid</strong>" },
-{ stimulus: "<strong>slew</strong>" },
-{ stimulus: "<strong>snade</strong>" },
-{ stimulus: "<strong>snead</strong>" },
-{ stimulus: "<strong>snew</strong>" },
-{ stimulus: "<strong>spead</strong>" },
-{ stimulus: "<strong>spide</strong>" },
-{ stimulus: "<strong>spay</strong>" },
-{ stimulus: "<strong>squead</strong>" },
-{ stimulus: "<strong>staid</strong>" },
-{ stimulus: "<strong>straid</strong>" },
-{ stimulus: "<strong>strid</strong>" },
-{ stimulus: "<strong>strode</strong>" },
-{ stimulus: "<strong>subsid</strong>" },
-{ stimulus: "<strong>suld</strong>" },
-{ stimulus: "<strong>supplay</strong>" },
-{ stimulus: "<strong>survaid</strong>" },
-{ stimulus: "<strong>swaid</strong>" },
-{ stimulus: "<strong>swaught</strong>" },
-{ stimulus: "<strong>tade</strong>" },
-{ stimulus: "<strong>tid</strong>" },
-{ stimulus: "<strong>tid</strong>" },
-{ stimulus: "<strong>tay</strong>" },
-{ stimulus: "<strong>titten</strong>" },
-{ stimulus: "<strong>tew</strong>" },
-{ stimulus: "<strong>trid</strong>" },
-{ stimulus: "<strong>tray</strong>" },
-{ stimulus: "<strong>twead</strong>" },
-{ stimulus: "<strong>unlod</strong>" },
-{ stimulus: "<strong>untay</strong>" },
-{ stimulus: "<strong>upsot</strong>" },
-{ stimulus: "<strong>vay</strong>" },
-{ stimulus: "<strong>waught</strong>" },
-{ stimulus: "<strong>whihten</strong>" },
-{ stimulus: "<strong>wihden</strong>" },
-{ stimulus: "<strong>rought</strong>" },
-{ stimulus: "<strong>writ</strong>" },
-    ];
+    prompt:  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>         incorrect past tense</strong></p></div>" +
+          "</div>",
 
-    var test_stimuli_four = [
-{ stimulus: "<strong>accyost</strong>" },
-{ stimulus: "<strong>uche</strong>" },
-{ stimulus: "<strong>affrant</strong>" },
-{ stimulus: "<strong>alluh</strong>" },
-{ stimulus: "<strong>amyost</strong>" },
-{ stimulus: "<strong>uncor</strong>" },
-{ stimulus: "<strong>awook</strong>" },
-{ stimulus: "<strong>book</strong>" },
-{ stimulus: "<strong>bung</strong>" },
-{ stimulus: "<strong>bunk</strong>" },
-{ stimulus: "<strong>bed</strong>" },
-{ stimulus: "<strong>bate</strong>" },
-{ stimulus: "<strong>betroo</strong>" },
-{ stimulus: "<strong>bewore</strong>" },
-{ stimulus: "<strong>blunk</strong>" },
-{ stimulus: "<strong>blunket</strong>" },
-{ stimulus: "<strong>blore</strong>" },
-{ stimulus: "<strong>blank</strong>" },
-{ stimulus: "<strong>blant</strong>" },
-{ stimulus: "<strong>bost</strong>" },
-{ stimulus: "<strong>brood</strong>" },
-{ stimulus: "<strong>brode</strong>" },
-{ stimulus: "<strong>brang</strong>" },
-{ stimulus: "<strong>brost</strong>" },
-{ stimulus: "<strong>cook</strong>" },
-{ stimulus: "<strong>core</strong>" },
-{ stimulus: "<strong>ced</strong>" },
-{ stimulus: "<strong>cheit</strong>" },
-{ stimulus: "<strong>chost</strong>" },
-{ stimulus: "<strong>chank</strong>" },
-{ stimulus: "<strong>chank</strong>" },
-{ stimulus: "<strong>clung</strong>" },
-{ stimulus: "<strong>clunk</strong>" },
-{ stimulus: "<strong>compore</strong>" },
-{ stimulus: "<strong>compate</strong>" },
-{ stimulus: "<strong>complate</strong>" },
-{ stimulus: "<strong>conced</strong>" },
-{ stimulus: "<strong>confrant</strong>" },
-{ stimulus: "<strong>convoo</strong>" },
-{ stimulus: "<strong>crunk</strong>" },
-{ stimulus: "<strong>crost</strong>" },
-{ stimulus: "<strong>cranch</strong>" },
-{ stimulus: "<strong>dore</strong>" },
-{ stimulus: "<strong>debank</strong>" },
-{ stimulus: "<strong>declore</strong>" },
-{ stimulus: "<strong>defate</strong>" },
-{ stimulus: "<strong>defroo</strong>" },
-{ stimulus: "<strong>defanct</strong>" },
-{ stimulus: "<strong>degrood</strong>" },
-{ stimulus: "<strong>deloo</strong>" },
-{ stimulus: "<strong>delate</strong>" },
-{ stimulus: "<strong>deplate</strong>" },
-{ stimulus: "<strong>despore</strong>" },
-{ stimulus: "<strong>dsmoo</strong>" },
-{ stimulus: "<strong>disploo</strong>" },
-{ stimulus: "<strong>disswood</strong>" },
-{ stimulus: "<strong>dank</strong>" },
-{ stimulus: "<strong>evood</strong>" },
-{ stimulus: "<strong>exced</strong>" },
-{ stimulus: "<strong>expange</strong>" },
-{ stimulus: "<strong>fook</strong>" },
-{ stimulus: "<strong>forret</strong>" },
-{ stimulus: "<strong>fanger</strong>" },
-{ stimulus: "<strong>flook</strong>" },
-{ stimulus: "<strong>flunk</strong>" },
-{ stimulus: "<strong>flore</strong>" },
-{ stimulus: "<strong>flaught</strong>" },
-{ stimulus: "<strong>flang</strong>" },
-{ stimulus: "<strong>froo</strong>" },
-{ stimulus: "<strong>frant</strong>" },
-{ stimulus: "<strong>fanction</strong>" },
-{ stimulus: "<strong>fyost</strong>" },
-{ stimulus: "<strong>gung</strong>" },
-{ stimulus: "<strong>glore</strong>" },
-{ stimulus: "<strong>grate</strong>" },
-{ stimulus: "<strong>hate</strong>" },
-{ stimulus: "<strong>hant</strong>" },
-{ stimulus: "<strong>imped</strong>" },
-{ stimulus: "<strong>inhoret</strong>" },
-{ stimulus: "<strong>invood</strong>" },
-{ stimulus: "<strong>janx</strong>" },
-{ stimulus: "<strong>kned</strong>" },
-{ stimulus: "<strong>langer</strong>" },
-{ stimulus: "<strong>lank</strong>" },
-{ stimulus: "<strong>mook</strong>" },
-{ stimulus: "<strong>mate</strong>" },
-{ stimulus: "<strong>mangle</strong>" },
-{ stimulus: "<strong>mistrate</strong>" },
-{ stimulus: "<strong>manch</strong>" },
-{ stimulus: "<strong>myost</strong>" },
-{ stimulus: "<strong>kned</strong>" },
-{ stimulus: "<strong>oboo</strong>" },
-{ stimulus: "<strong></strong>" },
-{ stimulus: "<strong>parood</strong>" },
-{ stimulus: "<strong>puh</strong>" },
-{ stimulus: "<strong>persuood</strong>" },
-{ stimulus: "<strong>perost</strong>" },
-{ stimulus: "<strong>persuood</strong>" },
-{ stimulus: "<strong>paught</strong>" },
-{ stimulus: "<strong>pang</strong>" },
-{ stimulus: "<strong>pavet</strong>" },
-{ stimulus: "<strong>ploo</strong>" },
-{ stimulus: "<strong>plange</strong>" },
-{ stimulus: "<strong>preced</strong>" },
-{ stimulus: "<strong>prepore</strong>" },
-{ stimulus: "<strong>proo</strong>" },
-{ stimulus: "<strong>proced</strong>" },
-{ stimulus: "<strong>panch</strong>" },
-{ stimulus: "<strong>quook</strong>" },
-{ stimulus: "<strong>rook</strong>" },
-{ stimulus: "<strong>runk</strong>" },
-{ stimulus: "<strong>reced</strong>" },
-{ stimulus: "<strong>refand</strong>" },
-{ stimulus: "<strong>repore</strong>" },
-{ stimulus: "<strong>repate</strong>" },
-{ stimulus: "<strong>rethank</strong>" },
-{ stimulus: "<strong>retrate</strong>" },
-{ stimulus: "<strong>ravet</strong>" },
-{ stimulus: "<strong>score</strong>" },
-{ stimulus: "<strong>seced</strong>" },
-{ stimulus: "<strong>shood</strong>" },
-{ stimulus: "<strong>shore</strong>" },
-{ stimulus: "<strong>shrank</strong>" },
-{ stimulus: "<strong>shan</strong>" },
-{ stimulus: "<strong>saught</strong>" },
-{ stimulus: "<strong>sloo</strong>" },
-{ stimulus: "<strong>slought</strong>" },
-{ stimulus: "<strong>slang</strong>" },
-{ stimulus: "<strong>snook</strong>" },
-{ stimulus: "<strong>snore</strong>" },
-{ stimulus: "<strong>spore</strong>" },
-{ stimulus: "<strong>sprought</strong>" },
-{ stimulus: "<strong>sprankle</strong>" },
-{ stimulus: "<strong>squore</strong>" },
-{ stimulus: "<strong>store</strong>" },
-{ stimulus: "<strong>stoo</strong>" },
-{ stimulus: "<strong>staught</strong>" },
-{ stimulus: "<strong>stang</strong>" },
-{ stimulus: "<strong>strungle</strong>" },
-{ stimulus: "<strong>stroo</strong>" },
-{ stimulus: "<strong>strought</strong>" },
-{ stimulus: "<strong>strang</strong>" },
-{ stimulus: "<strong>stan</strong>" },
-{ stimulus: "<strong>stant</strong>" },
-{ stimulus: "<strong>succed</strong>" },
-{ stimulus: "<strong>survoo</strong>" },
-{ stimulus: "<strong>swoo</strong>" },
-{ stimulus: "<strong>swaught</strong>" },
-{ stimulus: "<strong>swavel</strong>" },
-{ stimulus: "<strong>thunk</strong>" },
-{ stimulus: "<strong>thank</strong>" },
-{ stimulus: "<strong>thander</strong>" },
-{ stimulus: "<strong>tanker</strong>" },
-{ stimulus: "<strong>tankle</strong>" },
-{ stimulus: "<strong>trood</strong>" },
-{ stimulus: "<strong>trate</strong>" },
-{ stimulus: "<strong>twankle</strong>" },
-{ stimulus: "<strong>upgrood</strong>" },
-{ stimulus: "<strong>wode</strong>" },
-{ stimulus: "<strong>waught</strong>" },
-{ stimulus: "<strong>wang</strong>" },
-{ stimulus: "<strong>wank</strong>" },
-{ stimulus: "<strong>wrungle</strong>" },
-{ stimulus: "<strong>rought</strong>" },
-{ stimulus: "<strong>wrang</strong>" },
-{ stimulus: "<strong>wrankle</strong>" },
-{ stimulus: "<strong>yunk</strong>" },
-    ];
+    same_key: 'f',
+    different_key: 'j'
+  };
 
-    var test_stimuli_five = [
-{ stimulus: "<strong>abet</strong>" },
-{ stimulus: "<strong>abet</strong>" },
-{ stimulus: "<strong>acquit</strong>" },
-{ stimulus: "<strong>admit</strong>" },
-{ stimulus: "<strong>admit</strong>" },
-{ stimulus: "<strong>admat</strong>" },
-{ stimulus: "<strong>advocate</strong>" },
-{ stimulus: "<strong>agred</strong>" },
-{ stimulus: "<strong>alert</strong>" },
-{ stimulus: "<strong>assert</strong>" },
-{ stimulus: "<strong>audit</strong>" },
-{ stimulus: "<strong>avert</strong>" },
-{ stimulus: "<strong>babysit</strong>" },
-{ stimulus: "<strong>bat</strong>" },
-{ stimulus: "<strong>beat</strong>" },
-{ stimulus: "<strong>befat</strong>" },
-{ stimulus: "<strong>beget</strong>" },
-{ stimulus: "<strong>behead</strong>" },
-{ stimulus: "<strong>behead</strong>" },
-{ stimulus: "<strong>benefit</strong>" },
-{ stimulus: "<strong>beset</strong>" },
-{ stimulus: "<strong>beset</strong>" },
-{ stimulus: "<strong>bespought</strong>" },
-{ stimulus: "<strong>blanket</strong>" },
-{ stimulus: "<strong>blaught</strong>" },
-{ stimulus: "<strong>blurt</strong>" },
-{ stimulus: "<strong>bread</strong>" },
-{ stimulus: "<strong>bread</strong>" },
-{ stimulus: "<strong>budget</strong>" },
-{ stimulus: "<strong>butt</strong>" },
-{ stimulus: "<strong>carpet</strong>" },
-{ stimulus: "<strong>chat</strong>" },
-{ stimulus: "<strong>closet</strong>" },
-{ stimulus: "<strong>combat</strong>" },
-{ stimulus: "<strong>comfort</strong>" },
-{ stimulus: "<strong>commit</strong>" },
-{ stimulus: "<strong>commat</strong>" },
-{ stimulus: "<strong>convert</strong>" },
-{ stimulus: "<strong>covet</strong>" },
-{ stimulus: "<strong>credit</strong>" },
-{ stimulus: "<strong>decraid</strong>" },
-{ stimulus: "<strong>deposit</strong>" },
-{ stimulus: "<strong>discredit</strong>" },
-{ stimulus: "<strong>divert</strong>" },
-{ stimulus: "<strong>dread</strong>" },
-{ stimulus: "<strong>draught</strong>" },
-{ stimulus: "<strong>edit</strong>" },
-{ stimulus: "<strong>elicit</strong>" },
-{ stimulus: "<strong>embed</strong>" },
-{ stimulus: "<strong>emit</strong>" },
-{ stimulus: "<strong>emat</strong>" },
-{ stimulus: "<strong>exert</strong>" },
-{ stimulus: "<strong>exhibit</strong>" },
-{ stimulus: "<strong>exit</strong>" },
-{ stimulus: "<strong>ferret</strong>" },
-{ stimulus: "<strong>fidget</strong>" },
-{ stimulus: "<strong>fit</strong>" },
-{ stimulus: "<strong>fat</strong>" },
-{ stimulus: "<strong>flirt</strong>" },
-{ stimulus: "<strong>foot</strong>" },
-{ stimulus: "<strong>forfeit</strong>" },
-{ stimulus: "<strong>forget</strong>" },
-{ stimulus: "<strong>fraid</strong>" },
-{ stimulus: "<strong>fret</strong>" },
-{ stimulus: "<strong>get</strong>" },
-{ stimulus: "<strong>glatter</strong>" },
-{ stimulus: "<strong>glut</strong>" },
-{ stimulus: "<strong>head</strong>" },
-{ stimulus: "<strong>imbed</strong>" },
-{ stimulus: "<strong>inhabit</strong>" },
-{ stimulus: "<strong>inherit</strong>" },
-{ stimulus: "<strong>inhibit</strong>" },
-{ stimulus: "<strong>insert</strong>" },
-{ stimulus: "<strong>interpret</strong>" },
-{ stimulus: "<strong>invert</strong>" },
-{ stimulus: "<strong>jet</strong>" },
-{ stimulus: "<strong>jut</strong>" },
-{ stimulus: "<strong>knit</strong>" },
-{ stimulus: "<strong>knat</strong>" },
-{ stimulus: "<strong>laught</strong>" },
-{ stimulus: "<strong>limit</strong>" },
-{ stimulus: "<strong>laught</strong>" },
-{ stimulus: "<strong>latter</strong>" },
-{ stimulus: "<strong>misinterpret</strong>" },
-{ stimulus: "<strong>net</strong>" },
-{ stimulus: "<strong>offset</strong>" },
-{ stimulus: "<strong>omit</strong>" },
-{ stimulus: "<strong>omat</strong>" },
-{ stimulus: "<strong>orbit</strong>" },
-{ stimulus: "<strong>pat</strong>" },
-{ stimulus: "<strong>permit</strong>" },
-{ stimulus: "<strong>permat</strong>" },
-{ stimulus: "<strong>pet</strong>" },
-{ stimulus: "<strong>picket</strong>" },
-{ stimulus: "<strong>pilot</strong>" },
-{ stimulus: "<strong>pirate</strong>" },
-{ stimulus: "<strong>pit</strong>" },
-{ stimulus: "<strong>pivot</strong>" },
-{ stimulus: "<strong>plummet</strong>" },
-{ stimulus: "<strong>pocket</strong>" },
-{ stimulus: "<strong>profit</strong>" },
-{ stimulus: "<strong>prohibit</strong>" },
-{ stimulus: "<strong>putt</strong>" },
-{ stimulus: "<strong>quiet</strong>" },
-{ stimulus: "<strong>quat</strong>" },
-{ stimulus: "<strong>rebut</strong>" },
-{ stimulus: "<strong>refat</strong>" },
-{ stimulus: "<strong>regret</strong>" },
-{ stimulus: "<strong>reset</strong>" },
-{ stimulus: "<strong>revert</strong>" },
-{ stimulus: "<strong>revisit</strong>" },
-{ stimulus: "<strong>riot</strong>" },
-{ stimulus: "<strong>rivet</strong>" },
-{ stimulus: "<strong>rocket</strong>" },
-{ stimulus: "<strong>shed</strong>" },
-{ stimulus: "<strong>shred</strong>" },
-{ stimulus: "<strong>shrought</strong>" },
-{ stimulus: "<strong>shrought</strong>" },
-{ stimulus: "<strong>saught</strong>" },
-{ stimulus: "<strong>sit</strong>" },
-{ stimulus: "<strong>skaid</strong>" },
-{ stimulus: "<strong>skirt</strong>" },
-{ stimulus: "<strong>slit</strong>" },
-{ stimulus: "<strong>snought</strong>" },
-{ stimulus: "<strong>solicit</strong>" },
-{ stimulus: "<strong>spaught</strong>" },
-{ stimulus: "<strong>spit</strong>" },
-{ stimulus: "<strong>split</strong>" },
-{ stimulus: "<strong>splat</strong>" },
-{ stimulus: "<strong>spurt</strong>" },
-{ stimulus: "<strong>squaught</strong>" },
-{ stimulus: "<strong>squirt</strong>" },
-{ stimulus: "<strong>staught</strong>" },
-{ stimulus: "<strong>strut</strong>" },
-{ stimulus: "<strong>submit</strong>" },
-{ stimulus: "<strong>submat</strong>" },
-{ stimulus: "<strong>subvert</strong>" },
-{ stimulus: "<strong>sweat</strong>" },
-{ stimulus: "<strong>target</strong>" },
-{ stimulus: "<strong>thread</strong>" },
-{ stimulus: "<strong>ticket</strong>" },
-{ stimulus: "<strong>transmit</strong>" },
-{ stimulus: "<strong>tread</strong>" },
-{ stimulus: "<strong>trumpet</strong>" },
-{ stimulus: "<strong>twought</strong>" },
-{ stimulus: "<strong>upset</strong>" },
-{ stimulus: "<strong>upset</strong>" },
-{ stimulus: "<strong>visit</strong>" },
-{ stimulus: "<strong>vomit</strong>" },
-{ stimulus: "<strong>wed</strong>" },
-{ stimulus: "<strong>wet</strong>" },
-{ stimulus: "<strong>waught</strong>" },
-    ];
+      var practice_test_2 = {
+    type: 'same-different-html',
+    stimuli: ['<p>to paint</p>', '<p>painted</p>'],
+    //timing_first_stim: 1000,
+    second_stim_duration: null,
+    //prompt: "Press F for the correct word and J for not the correct word.",
+    prompt:  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>         incorrect past tense</strong></p></div>" +
+          "</div>",
 
-    var test_stimuli_six = [
-{ stimulus: "<strong>arised</strong>" },
-{ stimulus: "<strong>awaked</strong>" },
-{ stimulus: "<strong>babysited</strong>" },
-{ stimulus: "<strong>bed</strong>" },
-{ stimulus: "<strong>beated</strong>" },
-{ stimulus: "<strong>becomed</strong>" },
-{ stimulus: "<strong>befalled</strong>" },
-{ stimulus: "<strong>begeted</strong>" },
-{ stimulus: "<strong>begined</strong>" },
-{ stimulus: "<strong>beholded</strong>" },
-{ stimulus: "<strong>bended</strong>" },
-{ stimulus: "<strong>beseted</strong>" },
-{ stimulus: "<strong>bespeaked</strong>" },
-{ stimulus: "<strong>betted</strong>" },
-{ stimulus: "<strong>bided</strong>" },
-{ stimulus: "<strong>binded</strong>" },
-{ stimulus: "<strong>bited</strong>" },
-{ stimulus: "<strong>bleeded</strong>" },
-{ stimulus: "<strong>breeded</strong>" },
-{ stimulus: "<strong>bringed</strong>" },
-{ stimulus: "<strong>browbeated</strong>" },
-{ stimulus: "<strong>builded</strong>" },
-{ stimulus: "<strong>bursted</strong>" },
-{ stimulus: "<strong>buyed</strong>" },
-{ stimulus: "<strong>casted</strong>" },
-{ stimulus: "<strong>catched</strong>" },
-{ stimulus: "<strong>choosed</strong>" },
-{ stimulus: "<strong>cleaved</strong>" },
-{ stimulus: "<strong>clinged</strong>" },
-{ stimulus: "<strong>comed</strong>" },
-{ stimulus: "<strong>costed</strong>" },
-{ stimulus: "<strong>creeped</strong>" },
-{ stimulus: "<strong>cuted</strong>" },
-{ stimulus: "<strong>dealed</strong>" },
-{ stimulus: "<strong>diged</strong>" },
-{ stimulus: "<strong>dived</strong>" },
-{ stimulus: "<strong>doed</strong>" },
-{ stimulus: "<strong>drawed</strong>" },
-{ stimulus: "<strong>dreamed</strong>" },
-{ stimulus: "<strong>drinked</strong>" },
-{ stimulus: "<strong>drived</strong>" },
-{ stimulus: "<strong>eated</strong>" },
-{ stimulus: "<strong>falled</strong>" },
-{ stimulus: "<strong>feeded</strong>" },
-{ stimulus: "<strong>feeled</strong>" },
-{ stimulus: "<strong>fighted</strong>" },
-{ stimulus: "<strong>finded</strong>" },
-{ stimulus: "<strong>fitted</strong>" },
-{ stimulus: "<strong>flinged</strong>" },
-{ stimulus: "<strong>flied</strong>" },
-{ stimulus: "<strong>forbided</strong>" },
-{ stimulus: "<strong>foreseed</strong>" },
-{ stimulus: "<strong>forgeted</strong>" },
-{ stimulus: "<strong>forgived</strong>" },
-{ stimulus: "<strong>forgoed</strong>" },
-{ stimulus: "<strong>freezed</strong>" },
-{ stimulus: "<strong>geted</strong>" },
-{ stimulus: "<strong>gived</strong>" },
-{ stimulus: "<strong>goed</strong>" },
-{ stimulus: "<strong>grinded</strong>" },
-{ stimulus: "<strong>growed</strong>" },
-{ stimulus: "<strong>hanged</strong>" },
-{ stimulus: "<strong>heared</strong>" },
-{ stimulus: "<strong>heated</strong>" },
-{ stimulus: "<strong>hided</strong>" },
-{ stimulus: "<strong>hited</strong>" },
-{ stimulus: "<strong>holded</strong>" },
-{ stimulus: "<strong>hurted</strong>" },
-{ stimulus: "<strong>keeped</strong>" },
-{ stimulus: "<strong>kneeled</strong>" },
-{ stimulus: "<strong>leaded</strong>" },
-{ stimulus: "<strong>leaped</strong>" },
-{ stimulus: "<strong>leaved</strong>" },
-{ stimulus: "<strong>lended</strong>" },
-{ stimulus: "<strong>leted</strong>" },
-{ stimulus: "<strong>lighted</strong>" },
-{ stimulus: "<strong>losed</strong>" },
-{ stimulus: "<strong>maked</strong>" },
-{ stimulus: "<strong>meaned</strong>" },
-{ stimulus: "<strong>meeted</strong>" },
-{ stimulus: "<strong>misleaded</strong>" },
-{ stimulus: "<strong>misspended</strong>" },
-{ stimulus: "<strong>mistaked</strong>" },
-{ stimulus: "<strong>misunderstanded</strong>" },
-{ stimulus: "<strong>offseted</strong>" },
-{ stimulus: "<strong>outbided</strong>" },
-{ stimulus: "<strong>outdoed</strong>" },
-{ stimulus: "<strong>outgrowed</strong>" },
-{ stimulus: "<strong>outruned</strong>" },
-{ stimulus: "<strong>outselled</strong>" },
-{ stimulus: "<strong>outshined</strong>" },
-{ stimulus: "<strong>overcomed</strong>" },
-{ stimulus: "<strong>overdoed</strong>" },
-{ stimulus: "<strong>overhanged</strong>" },
-{ stimulus: "<strong>overheared</strong>" },
-{ stimulus: "<strong>overlayed</strong>" },
-{ stimulus: "<strong>overseed</strong>" },
-{ stimulus: "<strong>overselled</strong>" },
-{ stimulus: "<strong>overtaked</strong>" },
-{ stimulus: "<strong>overthrowed</strong>" },
-{ stimulus: "<strong>partaked</strong>" },
-{ stimulus: "<strong>pleaded</strong>" },
-{ stimulus: "<strong>proofreaded</strong>" },
-{ stimulus: "<strong>puted</strong>" },
-{ stimulus: "<strong>quitted</strong>" },
-{ stimulus: "<strong>readed</strong>" },
-{ stimulus: "<strong>rebuilded</strong>" },
-{ stimulus: "<strong>redoed</strong>" },
-{ stimulus: "<strong>redrawed</strong>" },
-{ stimulus: "<strong>remaked</strong>" },
-{ stimulus: "<strong>rereaded</strong>" },
-{ stimulus: "<strong>reselled</strong>" },
-{ stimulus: "<strong>reseted</strong>" },
-{ stimulus: "<strong>retaked</strong>" },
-{ stimulus: "<strong>retelled</strong>" },
-{ stimulus: "<strong>rethinked</strong>" },
-{ stimulus: "<strong>rewrited</strong>" },
-{ stimulus: "<strong>ridded</strong>" },
-{ stimulus: "<strong>rided</strong>" },
-{ stimulus: "<strong>ringed</strong>" },
-{ stimulus: "<strong>rised</strong>" },
-{ stimulus: "<strong>runed</strong>" },
-{ stimulus: "<strong>sayed</strong>" },
-{ stimulus: "<strong>seed</strong>" },
-{ stimulus: "<strong>seeked</strong>" },
-{ stimulus: "<strong>selled</strong>" },
-{ stimulus: "<strong>sended</strong>" },
-{ stimulus: "<strong>seted</strong>" },
-{ stimulus: "<strong>shaked</strong>" },
-{ stimulus: "<strong>sheded</strong>" },
-{ stimulus: "<strong>shined</strong>" },
-{ stimulus: "<strong>shooted</strong>" },
-{ stimulus: "<strong>shrinked</strong>" },
-{ stimulus: "<strong>shuted</strong>" },
-{ stimulus: "<strong>singed</strong>" },
-{ stimulus: "<strong>sinked</strong>" },
-{ stimulus: "<strong>sited</strong>" },
-{ stimulus: "<strong>sleeped</strong>" },
-{ stimulus: "<strong>slided</strong>" },
-{ stimulus: "<strong>slinged</strong>" },
-{ stimulus: "<strong>slited</strong>" },
-{ stimulus: "<strong>sneaked</strong>" },
-{ stimulus: "<strong>speaked</strong>" },
-{ stimulus: "<strong>spended</strong>" },
-{ stimulus: "<strong>spined</strong>" },
-{ stimulus: "<strong>spited</strong>" },
-{ stimulus: "<strong>splited</strong>" },
-{ stimulus: "<strong>spreaded</strong>" },
-{ stimulus: "<strong>springed</strong>" },
-{ stimulus: "<strong>standed</strong>" },
-{ stimulus: "<strong>stealed</strong>" },
-{ stimulus: "<strong>sticked</strong>" },
-{ stimulus: "<strong>stinged</strong>" },
-{ stimulus: "<strong>stinked</strong>" },
-{ stimulus: "<strong>strided</strong>" },
-{ stimulus: "<strong>striked</strong>" },
-{ stimulus: "<strong>stringed</strong>" },
-{ stimulus: "<strong>strived</strong>" },
-{ stimulus: "<strong>subleted</strong>" },
-{ stimulus: "<strong>sweared</strong>" },
-{ stimulus: "<strong>sweeped</strong>" },
-{ stimulus: "<strong>swimed</strong>" },
-{ stimulus: "<strong>swinged</strong>" },
-{ stimulus: "<strong>taked</strong>" },
-{ stimulus: "<strong>teached</strong>" },
-{ stimulus: "<strong>teared</strong>" },
-{ stimulus: "<strong>telled</strong>" },
-{ stimulus: "<strong>thinked</strong>" },
-{ stimulus: "<strong>throwed</strong>" },
-{ stimulus: "<strong>thrusted</strong>" },
-{ stimulus: "<strong>treaded</strong>" },
-{ stimulus: "<strong>undercuted</strong>" },
-{ stimulus: "<strong>undergoed</strong>" },
-{ stimulus: "<strong>underlied</strong>" },
-{ stimulus: "<strong>underselled</strong>" },
-{ stimulus: "<strong>understanded</strong>" },
-{ stimulus: "<strong>undertaked</strong>" },
-{ stimulus: "<strong>underwrited</strong>" },
-{ stimulus: "<strong>undoed</strong>" },
-{ stimulus: "<strong>unwinded</strong>" },
-{ stimulus: "<strong>upholded</strong>" },
-{ stimulus: "<strong>uprised</strong>" },
-{ stimulus: "<strong>upseted</strong>" },
-{ stimulus: "<strong>waked</strong>" },
-{ stimulus: "<strong>weared</strong>" },
-{ stimulus: "<strong>weaved</strong>" },
-{ stimulus: "<strong>weeped</strong>" },
-{ stimulus: "<strong>wined</strong>" },
-{ stimulus: "<strong>withdrawed</strong>" },
-{ stimulus: "<strong>withholded</strong>" },
-{ stimulus: "<strong>withstanded</strong>" },
-{ stimulus: "<strong>writed</strong>" },
-{ stimulus: "<strong>winded</strong>" },
-{ stimulus: "<strong>breaked</strong>" },
-    ];
+    same_key: 'f',
+    different_key: 'j'
+  };
 
-    
-    //randomly selecting stimuli from each group, proportinal to the size of the groups. There are 85 in group 1, 609 in group 2, 156 in group 3, 167 in group 4, and 152 in group 5. 1169 in total. There are 11 stimuli total (I rounded to the nearest whole number, so theres one extra).
-    var sample_one = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_one, 10);
-    var sample_two = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_two, 50);
-    var sample_three = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_three, 10);
-    var sample_four = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_four, 10);
-    var sample_five = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_five, 10);
-    var sample_six = jsPsych.randomization.sampleWithoutReplacement(test_stimuli_six, 20);
+      var practice_test_3 = {
+    type: 'same-different-html',
+    stimuli: ['<p>to climb</p>', '<p>clomb</p>'],
+    //timing_first_stim: 1000,
+   second_stim_duration: null,
+    //prompt: "Press F for the correct word and J for not the correct word.",
 
-    var big = sample_one.concat(sample_two, sample_three, sample_four, sample_five, sample_six);
+    prompt:  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>         incorrect past tense</strong></p></div>" +
+          "</div>",
+    same_key: 'f',
+    different_key: 'j'
+  };
 
-    var big_shuffled = jsPsych.randomization.shuffle(big);
-    
-    
+      var practice_test_4 = {
+    type: 'same-different-html',
+    stimuli: ['<p>to seek</p>', '<p>sought</p>'],
+    timing_first_stim: 1000,
+    second_stim_duration: null,
+    //prompt: "Press F for the correct word and J for not the correct word.",
+
+    prompt:  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>         incorrect past tense</strong></p></div>" +
+          "</div>",
+    same_key: 'f',
+    different_key: 'j'
+  };
+
+      var practice_test_5 = {
+    type: 'same-different-html',
+    stimuli: ['<p>to fly</p>', '<p>flewwed</p>'],
+    timing_first_stim: 1000,
+   second_stim_duration: null,
+    //prompt: "Press F for the correct word and J for not the correct word.",
+    prompt:  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>         incorrect past tense</strong></p></div>" +
+          "</div>",
+    same_key: 'f',
+    different_key: 'j'
+  };
+
+      var practice_test_6 = {
+    type: 'same-different-html',
+    stimuli: ['<p>to quit</p>', '<p>quought</p>'],
+    timing_first_stim: 1000,
+    second_stim_duration: null,
+   // prompt: "Press F for the correct word and J for not the correct word.",
+
+    prompt:  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>         incorrect past tense</strong></p></div>" +
+          "</div>",
+
+    same_key: 'f',
+    different_key: 'j'
+  };
+
+      var practice_test_7 = {
+    type: 'same-different-html',
+    stimuli: ['<p>to smile</p>', '<p>xpkyz</p>'],
+    timing_first_stim: 1000,
+    second_stim_duration: null,
+   // prompt: "Press F for the correct word and J for not the correct word.",
+    prompt:  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>         incorrect past tense</strong></p></div>" +
+          "</div>",
+    same_key: 'f',
+    different_key: 'j'
+  };
+
+    var practice_test_8 = {
+    type: 'same-different-html',
+    stimuli: ['<p>to open</p>', '<p>opened</p>'],
+    timing_first_stim: 1000,
+   second_stim_duration: null,
+    //prompt: "Press F for the correct word and J for not the correct word.",
+
+    prompt:  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>         incorrect past tense</strong></p></div>" +
+          "</div>",
+
+    same_key: 'f',
+    different_key: 'j'
+  };
+
+    var practice_test_9 = {
+    type: 'same-different-html',
+    stimuli: ['<p>to kick</p>', '<p>keecked</p>'],
+    timing_first_stim: 1000,
+    second_stim_duration: null,
+    //prompt: "Press F for the correct word and J for not the correct word.",
+
+    prompt:  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>         incorrect past tense</strong></p></div>" +
+          "</div>",
+    same_key: 'f',
+    different_key: 'j'
+  };
     //creating the test
-    var test = {
+    var practice_test = {
       type: "html-keyboard-response",
       stimulus: jsPsych.timelineVariable('stimulus'),
       choices: ['f', 'j'],
-      
+      prompt:  
+      	  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>         incorrect past tense</strong></p></div>" +
+          "</div>"
+    }
+
+
+      var practice_one = {
+      timeline: [practice_fixation, practice_test_1, practice_fixation, practice_test_2, practice_fixation, practice_test_3, practice_fixation, practice_test_4, practice_fixation, practice_test_5, practice_fixation, practice_test_6, practice_fixation, practice_test_7, practice_fixation, practice_test_8, practice_fixation, practice_test_9],
+      //timeline_variables: practice_test_stimuli,
+      //randomize_order: true
     };
+    timeline.push(practice_one);
+
+
+     var practice_thanks = {
+      type: "html-keyboard-response",
+      stimulus: "<p>Thank you for completing the practice test. We'll now begin the experiment, which will take about <strong>5 minutes</strong>.</p>" + "<p>Make sure you're in a comfortable position and free from any distractions such as music, the TV, other people in the room, etc.</p>" + "<p>This experiment requires your undivided attention. Data containinng unusual activity or response times must be excluded, and workers will not be paid.</p>" + "<br>A pop-up will appear at the end of the experiment. Please copy-paste this code into Mechanical Turk.</br>" + "<br><strong>When you're ready, place your fingers on the F and J keys.</p>" + "<p style = 'font-size: 12px;'><strong>Press any key to begin the experiment.</p>",
+           post_trial_gap: 1250,
+    };
+    timeline.push(practice_thanks);
+    //test stimuli data. Separated into 5 groups depending on inflection class (test_stimuli_one is all stimuli with an inflection class between 0 and 10, test_stimuli_two between 10 and 20, etc.)
+
+
+var test_stimuli_38_1 = [
+      { stimuli: ['<p>to drink</p>', '<p>drank</p>']},
+      { stimuli: ['<p>to drink</p>', '<p>drinked</p>']},
+      { stimuli: ['<p>to blink</p>', '<p>blank</p>']},
+      { stimuli: ['<p>to blink</p>', '<p>blinked</p>']},
+
+      ];
+
+var test_stimuli_38_2 = [
+      { stimuli: ['<p>to ring</p>', '<p>rang</p>']},
+      { stimuli: ['<p>to ring</p>', '<p>ringed</p>']},
+      { stimuli: ['<p>to ping</p>', '<p>pang</p>']},
+      { stimuli: ['<p>to ping</p>', '<p>pinged</p>']},
+
+      ];
+
+var test_stimuli_38_3 = [ 
+      { stimuli: ['<p>to sing</p>', '<p>sang</p>']},
+      { stimuli: ['<p>to sing</p>', '<p>singed</p>']},
+      { stimuli: ['<p>to wring</p>', '<p>wrang</p>']},
+      { stimuli: ['<p>to wring</p>', '<p>wringed</p>']},
+
+      ];
+
+var test_stimuli_38_4 = [
+
+      { stimuli: ['<p>to sink</p>', '<p>sank</p>']},
+      { stimuli: ['<p>to sink</p>', '<p>sinked</p>']},
+      { stimuli: ['<p>to link</p>', '<p>lank</p>']},
+      { stimuli: ['<p>to link</p>', '<p>linked</p>']},
+
+      ];
+
+ var test_stimuli_38_5 = [
+
+      { stimuli: ['<p>to spring</p>', '<p>sprang</p>']},
+      { stimuli: ['<p>to spring</p>', '<p>springed</p>']},
+      { stimuli: ['<p>to string</p>', '<p>strang</p>']},
+      { stimuli: ['<p>to string</p>', '<p>stringed</p>']}
+    
+    ];
+
+   var test_stimuli_15_1 = [
+
+   	{ stimuli: ['<p>to ride</p>', '<p>rode</p>']},
+    { stimuli: ['<p>to ride</p>', '<p>rided</p>']},
+    { stimuli: ['<p>to side</p>', '<p>sode</p>']},
+    { stimuli: ['<p>to side</p>', '<p>sided</p>']},
+
+    ];
+
+    var test_stimuli_15_2 = [
+
+    { stimuli: ['<p>to shine</p>', '<p>shone</p>']},
+    { stimuli: ['<p>to shine</p>', '<p>shined</p>']},
+    { stimuli: ['<p>to whine</p>', '<p>whone</p>']},
+    { stimuli: ['<p>to whine</p>', '<p>whined</p>']},
+
+    ];
+
+    var test_stimuli_15_3 = [
+
+    { stimuli: ['<p>to dive</p>', '<p>dove</p>']},
+    { stimuli: ['<p>to dive</p>', '<p>dived</p>']},
+    { stimuli: ['<p>to thrive</p>', '<p>throve</p>']},
+    { stimuli: ['<p>to thrive</p>', '<p>thrived</p>']},
+
+    ];
+
+    var test_stimuli_15_4 = [
+
+    { stimuli: ['<p>to rise</p>', '<p>rose</p>']},
+    { stimuli: ['<p>to rise</p>', '<p>rised</p>']},
+    { stimuli: ['<p>to size</p>', '<p>soze</p>']},
+    { stimuli: ['<p>to size</p>', '<p>sized</p>']},
+
+    ];
+
+    var test_stimuli_15_5 = [
+
+    { stimuli: ['<p>to write</p>', '<p>wrote</p>']},
+    { stimuli: ['<p>to write</p>', '<p>writed</p>']},
+    { stimuli: ['<p>to excite</p>', '<p>excote</p>']},
+    { stimuli: ['<p>to excite</p>', '<p>excited</p>']},
+  
+   ];
+
+   var test_stimuli_8 = [
+
+ 	{ stimuli: ['<p>to grind</p>', '<p>ground</p>']},
+    { stimuli: ['<p>to grind</p>', '<p>grinded</p>']},
+    { stimuli: ['<p>to blind</p>', '<p>blound</p>']},
+    { stimuli: ['<p>to blind</p>', '<p>blinded</p>']},
+    
+    ];
+
+    var test_stimuli_28_1 = [
+ 	{ stimuli: ['<p>to hide</p>', '<p>hid</p>']},
+    { stimuli: ['<p>to hide</p>', '<p>hided</p>']},
+    { stimuli: ['<p>to side</p>', '<p>sid</p>']},
+    { stimuli: ['<p>to side</p>', '<p>sided</p>']},
+
+    ];
+
+    var test_stimuli_28_2 = [
+     	
+    { stimuli: ['<p>to light</p>', '<p>lit</p>']},
+    { stimuli: ['<p>to light</p>', '<p>lighted</p>']},
+    { stimuli: ['<p>to blight</p>', '<p>blit</p>']},
+    { stimuli: ['<p>to blight</p>', '<p>blighted</p>']},
+
+    ];
+     	
+    var test_stimuli_28_3 = [
+
+    { stimuli: ['<p>to slide</p>', '<p>slid</p>']},
+    { stimuli: ['<p>to slide</p>', '<p>slided</p>']},
+    { stimuli: ['<p>to glide</p>', '<p>glid</p>']},
+    { stimuli: ['<p>to glide</p>', '<p>glided</p>']},
+   
+    ];
+
+    var test_stimuli_30_1 = [
+
+ 	{ stimuli: ['<p>to blow</p>', '<p>blew</p>']},
+    { stimuli: ['<p>to blow</p>', '<p>blowed</p>']},
+    { stimuli: ['<p>to flow</p>', '<p>flew</p>']},
+    { stimuli: ['<p>to flow</p>', '<p>flowed</p>']},
+
+    ];
+
+    var test_stimuli_30_2 = [
+
+    { stimuli: ['<p>to grow</p>', '<p>grew</p>']},
+    { stimuli: ['<p>to grow</p>', '<p>growed</p>']},
+    { stimuli: ['<p>to snow</p>', '<p>snew</p>']},
+    { stimuli: ['<p>to snow</p>', '<p>snowed</p>']},
+
+    ];
+
+    var test_stimuli_30_3 = [
+
+    { stimuli: ['<p>to know</p>', '<p>knew</p>']},
+    { stimuli: ['<p>to know</p>', '<p>knowed</p>']},
+    { stimuli: ['<p>to row</p>', '<p>rew</p>']},
+    { stimuli: ['<p>to row</p>', '<p>rowed</p>']},
+
+    ];
+
+    var test_stimuli_30_4 = [
+
+    { stimuli: ['<p>to throw</p>', '<p>threw</p>']},
+    { stimuli: ['<p>to throw</p>', '<p>throwed</p>']},
+    { stimuli: ['<p>to slow</p>', '<p>slew</p>']},
+    { stimuli: ['<p>to slow</p>', '<p>slowed</p>']},
+    
+    ];
+
+    var test_stimuli_36_1 = [
+
+ 	{ stimuli: ['<p>to bleed</p>', '<p>bled</p>']},
+    { stimuli: ['<p>to bleed</p>', '<p>bleeded</p>']},
+    { stimuli: ['<p>to kneed</p>', '<p>kned</p>']},
+    { stimuli: ['<p>to kneed</p>', '<p>kneeded</p>']},
+
+    ];
+
+    var test_stimuli_36_2 = [
+
+    { stimuli: ['<p>to breed</p>', '<p>bred</p>']},
+    { stimuli: ['<p>to breed</p>', '<p>breeded</p>']},
+    { stimuli: ['<p>to bead</p>', '<p>bed</p>']},
+    { stimuli: ['<p>to bead</p>', '<p>beaded</p>']},
+
+    ];
+
+    var test_stimuli_36_3 = [
+
+    { stimuli: ['<p>to feed</p>', '<p>fed</p>']},
+    { stimuli: ['<p>to feed</p>', '<p>feeded</p>']},
+    { stimuli: ['<p>to need</p>', '<p>ned</p>']},
+    { stimuli: ['<p>to need</p>', '<p>needed</p>']},
+    
+    ];
+
+    var test_stimuli_20_1 = [
+
+ 	{ stimuli: ['<p>to fling</p>', '<p>flung</p>']},
+    { stimuli: ['<p>to fling</p>', '<p>flinged</p>']},
+    { stimuli: ['<p>to flick</p>', '<p>fluck</p>']},
+    { stimuli: ['<p>to flick</p>', '<p>flicked</p>']},
+
+    ];
+
+     var test_stimuli_20_2 = [
+
+    { stimuli: ['<p>to spin</p>', '<p>spun</p>']},
+    { stimuli: ['<p>to spin</p>', '<p>spinned</p>']},
+    { stimuli: ['<p>to grin</p>', '<p>grun</p>']},
+    { stimuli: ['<p>to grin</p>', '<p>grinned</p>']},
+
+    ];
+
+     var test_stimuli_20_3 = [
+
+    { stimuli: ['<p>to stick</p>', '<p>stuck</p>']},
+    { stimuli: ['<p>to stick</p>', '<p>sticked</p>']},
+    { stimuli: ['<p>to click</p>', '<p>cluck</p>']},
+    { stimuli: ['<p>to click</p>', '<p>clicked</p>']},
+
+    ];
+
+     var test_stimuli_20_4 = [
+
+    { stimuli: ['<p>to win</p>', '<p>won</p>']},
+    { stimuli: ['<p>to win</p>', '<p>winned</p>']},
+    { stimuli: ['<p>to sin</p>', '<p>son</p>']},
+    { stimuli: ['<p>to sin</p>', '<p>sinned</p>']},
+
+    ];
+
+     var test_stimuli_20_5 = [
+
+    { stimuli: ['<p>to swing</p>', '<p>swang</p>']},
+    { stimuli: ['<p>to swing</p>', '<p>swinged</p>']},
+    { stimuli: ['<p>to bring</p>', '<p>brang</p>']},
+    { stimuli: ['<p>to bring</p>', '<p>bringed</p>']},
+    
+    ];
+
+var test_stimuli_12_1 = [
+
+ 	{ stimuli: ['<p>to weep</p>', '<p>wept</p>']},
+    { stimuli: ['<p>to weep</p>', '<p>weeped</p>']},
+    { stimuli: ['<p>to beep</p>', '<p>bept</p>']},
+    { stimuli: ['<p>to beep</p>', '<p>beeped</p>']},
+
+    ];
+
+    var test_stimuli_12_2 = [
+
+    { stimuli: ['<p>to dream</p>', '<p>drempt</p>']},
+    { stimuli: ['<p>to dream</p>', '<p>dreamed</p>']},
+    { stimuli: ['<p>to screamed</p>', '<p>scrempt</p>']},
+    { stimuli: ['<p>to scream</p>', '<p>screamed</p>']},
+
+    ];
+
+    var test_stimuli_12_3 = [
+
+    { stimuli: ['<p>to mean</p>', '<p>meant</p>']},
+    { stimuli: ['<p>to mean</p>', '<p>meaned</p>']},
+    { stimuli: ['<p>to beam</p>', '<p>beamt</p>']},
+    { stimuli: ['<p>to beam</p>', '<p>beamed</p>']},
+
+    ];
+
+    var test_stimuli_12_4 = [
+
+    { stimuli: ['<p>to leap</p>', '<p>lept</p>']},
+    { stimuli: ['<p>to leap</p>', '<p>leaped</p>']},
+    { stimuli: ['<p>to peep</p>', '<p>pept</p>']},
+    { stimuli: ['<p>to peep</p>', '<p>peeped</p>']},
+
+	];
+
+var test_stimuli_14_1 = [
+
+ 	{ stimuli: ['<p>to freeze</p>', '<p>froze</p>']},
+    { stimuli: ['<p>to freeze</p>', '<p>freezed</p>']},
+    { stimuli: ['<p>to sneeze</p>', '<p>snoze</p>']},
+    { stimuli: ['<p>to sneeze</p>', '<p>sneezed</p>']},
+
+    ];
+
+    var test_stimuli_14_2 = [
+
+    { stimuli: ['<p>to speak</p>', '<p>spoke</p>']},
+    { stimuli: ['<p>to speak</p>', '<p>speaked</p>']},
+    { stimuli: ['<p>to leak</p>', '<p>loke</p>']},
+    { stimuli: ['<p>to leak</p>', '<p>leaked</p>']},
+
+    ];
+
+    var test_stimuli_14_3 = [
+
+    { stimuli: ['<p>to steal</p>', '<p>stole</p>']},
+    { stimuli: ['<p>to steal</p>', '<p>stealed</p>']},
+    { stimuli: ['<p>to seal</p>', '<p>sole</p>']},
+    { stimuli: ['<p>to seal</p>', '<p>sealed</p>']},
+
+    ];
+
+    var test_stimuli_14_4 = [
+
+    { stimuli: ['<p>to weave</p>', '<p>wove</p>']},
+    { stimuli: ['<p>to weave</p>', '<p>weaved</p>']},
+    { stimuli: ['<p>to tease</p>', '<p>tose</p>']},
+    { stimuli: ['<p>to tease</p>', '<p>teased</p>']},
+
+	];
+
+var test_stimuli_18_1 = [
+
+ 	{ stimuli: ['<p>to bend</p>', '<p>bent</p>']},
+    { stimuli: ['<p>to bend</p>', '<p>bended</p>']},
+    { stimuli: ['<p>to bond</p>', '<p>bont</p>']},
+    { stimuli: ['<p>to bond</p>', '<p>bonded</p>']},
+
+    ];
+
+    var test_stimuli_18_2 = [
+     	
+    { stimuli: ['<p>to build</p>', '<p>built</p>']},
+    { stimuli: ['<p>to build</p>', '<p>builded</p>']},
+    { stimuli: ['<p>to bound</p>', '<p>bount</p>']},
+    { stimuli: ['<p>to bound</p>', '<p>bounded</p>']},
+
+    ];
+
+    var test_stimuli_18_3 = [
+
+ 	{ stimuli: ['<p>to lend</p>', '<p>lent</p>']},
+    { stimuli: ['<p>to lend</p>', '<p>lended</p>']},
+    { stimuli: ['<p>to land</p>', '<p>lant</p>']},
+    { stimuli: ['<p>to land</p>', '<p>landed</p>']},
+
+    ];
+
+    var test_stimuli_18_4 = [
+
+    { stimuli: ['<p>to send</p>', '<p>sent</p>']},
+    { stimuli: ['<p>to send</p>', '<p>sended</p>']},
+    { stimuli: ['<p>to fend</p>', '<p>fent</p>']},
+    { stimuli: ['<p>to fend</p>', '<p>fended</p>']},
+
+    ];
+
+    var test_stimuli_18_5 = [
+
+    { stimuli: ['<p>to spend</p>', '<p>spent</p>']},
+    { stimuli: ['<p>to spend</p>', '<p>spended</p>']},
+    { stimuli: ['<p>to blend</p>', '<p>blent</p>']},
+    { stimuli: ['<p>to blend</p>', '<p>blended</p>']},
+
+];
+
+var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimuli_38_4, test_stimuli_38_5, test_stimuli_15_1, test_stimuli_15_2, test_stimuli_15_3, test_stimuli_15_4, test_stimuli_15_5, test_stimuli_8, test_stimuli_28_1, test_stimuli_28_2, test_stimuli_28_3, test_stimuli_30_1, test_stimuli_30_2, test_stimuli_30_3, test_stimuli_30_4, test_stimuli_36_1, test_stimuli_36_2, test_stimuli_36_3, test_stimuli_20_1, test_stimuli_20_2, test_stimuli_20_3, test_stimuli_20_4, test_stimuli_20_5, test_stimuli_12_1, test_stimuli_12_2, test_stimuli_12_3, test_stimuli_12_4, test_stimuli_14_1, test_stimuli_14_2, test_stimuli_14_4, test_stimuli_18_1, test_stimuli_18_2, test_stimuli_18_3, test_stimuli_18_4, test_stimuli_18_5];
+    
+    //randomly selecting stimuli from each group, proportinal to the size of the groups. There are 85 in group 1, 609 in group 2, 156 in group 3, 167 in group 4, and 152 in group 5. 1169 in total. There are 11 stimuli total (I rounded to the nearest whole number, so there's one extra). //10, 50, 10, 10, 10, 20. (Made 20% smaller).
+    var sample = jsPsych.randomization.sampleWithoutReplacement(array, 22);
+
+    var big = sample[0].concat(sample[1], sample[2], sample[3], sample[4], sample[5]);
+
+    var big_shuffled = jsPsych.randomization.shuffle(big);
+
+    
+    var small = sample[0].concat(sample[1]);
+
+    var small_shuffled = jsPsych.randomization.shuffle(small);
+    
+    
+    //creating the test
+   var test = {
+    type: 'same-different-html',
+    stimuli: jsPsych.timelineVariable('stimuli'),
+    //timing_first_stim: 1000,
+    second_stim_duration: null,
+    //prompt: "Press F for the correct word and J for not the correct word.",
+
+    prompt:  "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct past tense</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>         incorrect past tense</strong></p></div>" +
+          "</div>",
+
+    same_key: 'f',
+    different_key: 'j'
+  };
 
     /*
      prompt: "<div style='height: 700px; width: 500px; position: relative'>" +
@@ -1471,11 +813,12 @@
 
     //creating the individual trials and pushing them onto the timeline
     var trial_one = {
-      timeline: [test],
-      timeline_variables: big_shuffled,
+      timeline: [practice_fixation, test],
+      timeline_variables: small_shuffled,
       //randomize_order: true
     }
     timeline.push(trial_one);
+
     
     /*
     var trial_two = {
@@ -1563,7 +906,7 @@
 
     var submit_block = {
       type: "html-keyboard-response",
-      stimulus: "<strong>Congratulations!</strong>" + "<p>You've completed the experiment.</p>" + "<br>Thank you for your participation.</p>" + "<p style = 'font-size: 12px;'><strong>Press any key to submit the data.</strong></p>",
+      stimulus: "<strong>Congratulations!</strong>" + "<p>You've completed the experiment.</p>" + "<br>Thank you for your participation.</p>" + "<p style = 'font-size: 12px;'><strong>Press any key to receive the code.</strong></p>" + "<br>WARNING: the code will appear as a pop-up. You will not be able to access the code if you close the pop-up.</br>",
       timing_response: .001,      
       timing_post_trial: 0,
       on_finish: function() {
