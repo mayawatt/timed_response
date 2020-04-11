@@ -51,13 +51,13 @@ jsPsych.plugins['same-different-html'] = (function() {
       gap_duration: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Gap duration',
-        default: 500,
+        default: 0,
         description: 'How long to show a blank screen in between the two stimuli.'
       },
       second_stim_duration: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Second stimulus duration',
-        default: 1000,
+        default: null,
         description: 'How long to show the second stimulus for in milliseconds.'
       },
       prompt: {
@@ -71,7 +71,13 @@ jsPsych.plugins['same-different-html'] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
-    display_element.innerHTML = '<div class="jspsych-same-different-stimulus">'+trial.stimuli[0]+'</div>';
+    var ah = '<div class="jspsych-same-different-stimulus">'+trial.stimuli[0]+'</div>';
+
+    //show prompt here
+      if (trial.prompt !== null) {
+        ah += trial.prompt;
+      }
+      display_element.innerHTML = ah;
 
     var first_stim_info;
     if (trial.first_stim_duration > 0) {
@@ -103,6 +109,7 @@ jsPsych.plugins['same-different-html'] = (function() {
     function showSecondStim() {
 
       var html = '<div class="jspsych-same-different-stimulus">'+trial.stimuli[1]+'</div>';
+      
       //show prompt here
       if (trial.prompt !== null) {
         html += trial.prompt;
