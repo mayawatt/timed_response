@@ -189,7 +189,7 @@ timeline.push(demographics);
       var instructions = {
         type: "html-keyboard-response",
         stimulus: "<p><strong><u>INSTRUCTIONS</u></strong></p>" + "<p>A fixation cross will appear in the center of your screen followed by a word. The word will then change to either the correct past tense or an incorrect past tense.</p>" +
-          "<br>If the word is the <strong>correct past tense</strong> of the first word (for example, jump and \"jumped\"), press the F key. If the word is an <strong>incorrect past tense</strong>, press the J key.</p>" + "<p><strong>Move as quickly as you can without losing accuracy.</strong></p>" + "<br><strong>When you're ready, place your fingers on the F and J keys.</p>" + "<p style = 'font-size: 12px;'><strong>Press any key to begin the practice test.</p>",
+          "<br>If the word is the <strong>correct past tense</strong>, press the <strong>F key</strong>. If the word is an <strong>incorrect past tense</strong>, press the <strong>J key</strong>.</p>" + "<p><strong>Move as quickly as you can without losing accuracy.</strong></p>" + "<br><strong>When you're ready, place your fingers on the F and J keys.</p>" + "<p style = 'font-size: 12px;'><strong>Press any key to begin the practice test.</p>",
         post_trial_gap: 1250,};
      
       timeline.push(instructions);
@@ -906,7 +906,7 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
 
     var submit_block = {
       type: "html-keyboard-response",
-      stimulus: "<strong>Congratulations!</strong>" + "<p>You've completed the experiment.</p>" + "<br>Thank you for your participation.</p>" + "<p style = 'font-size: 12px;'><strong>Press any key to receive the code.</strong></p>" + "<br>WARNING: the code will appear as a pop-up. You will not be able to access the code if you close the pop-up.</br>",
+      stimulus: "<strong>Congratulations!</strong>" + "<p>You've completed the experiment.</p>" + "<br>Thank you for your participation.</p>" + "<br>WARNING: the code will appear as a pop-up. You will not be able to access the code if you close the pop-up.</br>" + "<p style = 'font-size: 12px;'><strong>Press any key to receive the code.</strong></p>",
       timing_response: .001,      
       timing_post_trial: 0,
       on_finish: function() {
