@@ -855,8 +855,8 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
     function writeUserData(code) {
       firebase.database().ref('users/' + code).set({
       //User ID: code,
-      data: jsPsych.data.get().csv(),
-      interactionData: jsPsych.data.getInteractionData().csv()
+      data: jsPsych.data.get().json(),
+      interactionData: jsPsych.data.getInteractionData().json()
       });
     }
 
