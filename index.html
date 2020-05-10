@@ -877,6 +877,7 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
       timeline: timeline,
       on_finish: function() {
         //var turk = jsPsych.turk.turkInfo().hitId
+        jsPsych.data.displayData();
         alert("Your survey code is: " + code + ". Please copy this code now and paste it into Mechanical Turk. " + "You may then close this tab.");
       }
     });
