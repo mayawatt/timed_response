@@ -54,6 +54,8 @@
     //create timeline
     var timeline = [];
 
+    /*
+
 
     var robot = {
       type: "image-button-response",
@@ -191,7 +193,7 @@ timeline.push(demographics);
     var practice_fixation = {
       type: 'html-keyboard-response',
       //stimulus: "<p><strong>+</strong></p>" + "<p style = 'color:White; font-size: 24px;'>ooo</p>",
-      stimulus: '<div style="font-size:60px;">+</div>',
+      stimulus: '<div><font size="+3">+</font></div>',
       choices: jsPsych.NO_KEYS,
       //prompt: "Press F for correct word and J for not the correct word.",
       prompt: 
@@ -421,6 +423,8 @@ timeline.push(demographics);
     };
     timeline.push(practice_thanks);
     //test stimuli data. Separated into 5 groups depending on inflection class (test_stimuli_one is all stimuli with an inflection class between 0 and 10, test_stimuli_two between 10 and 20, etc.)
+
+    */
 
 
 var test_stimuli_38_1 = [
@@ -855,7 +859,7 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
     function writeUserData(code) {
       firebase.database().ref('users/' + code).set({
       //User ID: code,
-      data: jsPsych.data.get().json(),
+      data: jsPsych.data.get(),
       interactionData: jsPsych.data.getInteractionData().json()
       });
     }
@@ -877,7 +881,7 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
       timeline: timeline,
       on_finish: function() {
         //var turk = jsPsych.turk.turkInfo().hitId
-        jsPsych.data.displayData();
+        jsPsych.data.displayData('json');
         //alert("Your survey code is: " + code + ". Please copy this code now and paste it into Mechanical Turk. " + "You may then close this tab.");
       }
     });
