@@ -426,6 +426,25 @@ timeline.push(demographics);
 
     */
 
+    var practice_fixation = {
+      type: 'html-keyboard-response',
+      //stimulus: "<p><strong>+</strong></p>" + "<p style = 'color:White; font-size: 24px;'>ooo</p>",
+      stimulus: '<div><font size="+3">+</font></div>',
+      choices: jsPsych.NO_KEYS,
+      //prompt: "Press F for correct word and J for not the correct word.",
+      prompt: 
+          "<div style='width: 600px;'>" +
+          "<div style='float: left;'><img src='img/letter_f.png'></img>" +
+          "<p class='small'><strong>correct</strong></p></div>" + 
+          "<div style='width: 600px;'>" +
+          "<div class='float: right;'><img src='img/letter_j.png'></img>" +
+          "<p class='small'><strong>incorrect</strong></p></div>" +
+          "</div>",
+      trial_duration: function() {
+        return jsPsych.randomization.sampleWithoutReplacement([1000], 1)[0];
+      }
+    };
+
 
 var test_stimuli_38_1 = [
       { stimuli: ['<p><font size="+3"><u>to drink</u></font></p>', '<p><font size="+3">drank</font></p>']},
