@@ -191,7 +191,7 @@ timeline.push(demographics);
     var practice_fixation = {
       type: 'html-keyboard-response',
       //stimulus: "<p><strong>+</strong></p>" + "<p style = 'color:White; font-size: 24px;'>ooo</p>",
-      stimulus: '<p><font size="+3"><strong>+</strong></font></p>',
+      stimulus: '<div style="font-size:60px;">+</div>',
       choices: jsPsych.NO_KEYS,
       //prompt: "Press F for correct word and J for not the correct word.",
       prompt: 
@@ -878,7 +878,7 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
       on_finish: function() {
         //var turk = jsPsych.turk.turkInfo().hitId
         jsPsych.data.displayData();
-        alert("Your survey code is: " + code + ". Please copy this code now and paste it into Mechanical Turk. " + "You may then close this tab.");
+        //alert("Your survey code is: " + code + ". Please copy this code now and paste it into Mechanical Turk. " + "You may then close this tab.");
       }
     });
 
