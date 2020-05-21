@@ -54,8 +54,6 @@
     //create timeline
     var timeline = [];
 
-    /*
-
 
     var robot = {
       type: "image-button-response",
@@ -190,6 +188,8 @@ timeline.push(demographics);
      
       timeline.push(instructions);
 
+
+
     var practice_fixation = {
       type: 'html-keyboard-response',
       //stimulus: "<p><strong>+</strong></p>" + "<p style = 'color:White; font-size: 24px;'>ooo</p>",
@@ -208,6 +208,7 @@ timeline.push(demographics);
         return jsPsych.randomization.sampleWithoutReplacement([1000], 1)[0];
       }
     };
+
     
 
     var practice_test_stimuli = [
@@ -418,18 +419,18 @@ timeline.push(demographics);
 
      var practice_thanks = {
       type: "html-keyboard-response",
-      stimulus: "<p>We'll now begin the experiment, which will take about <strong>5 minutes</strong>.</p>" + "<p>Make sure you're in a comfortable position and free from any distractions such as music, the TV, other people in the room, etc.</p>" + "<p>This experiment requires your undivided attention. Data containinng unusual activity or response times must be excluded, and workers will not be paid.</p>" + "<br>A pop-up will appear at the end of the experiment. Please remember to copy-paste this code into Mechanical Turk.</br>" + "<br><strong>When you're ready, place your fingers on the F and J keys.</p>" + "<p style = 'font-size: 12px;'><strong>Press any key to begin the experiment.</p>",
+      stimulus: "<p>We'll now begin the experiment, which will take about <strong>5 minutes</strong>.</p>" + "<p>Make sure you're in a comfortable position and free from any distractions such as music, the TV, other people in the room, etc.</p>" + "<p>This experiment requires your undivided attention. Data containing unusual activity or response times must be excluded, and workers will not be paid.</p>" + "<br>A pop-up will appear at the end of the experiment. Please remember to copy-paste this code into Mechanical Turk.</br>" + "<br><strong>When you're ready, place your fingers on the F and J keys.</p>" + "<p style = 'font-size: 12px;'><strong>Press any key to begin the experiment.</p>",
            post_trial_gap: 1250,
     };
     timeline.push(practice_thanks);
     //test stimuli data. Separated into 5 groups depending on inflection class (test_stimuli_one is all stimuli with an inflection class between 0 and 10, test_stimuli_two between 10 and 20, etc.)
 
-    */
+    
 
     var practice_fixation = {
       type: 'html-keyboard-response',
       //stimulus: "<p><strong>+</strong></p>" + "<p style = 'color:White; font-size: 24px;'>ooo</p>",
-      stimulus: '<div><font size="+3">+</font></div>',
+      stimulus: '<p><font size="+3">+</font></p>',
       choices: jsPsych.NO_KEYS,
       //prompt: "Press F for correct word and J for not the correct word.",
       prompt: 
@@ -759,17 +760,18 @@ var test_stimuli_18_1 = [
 
 var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimuli_38_4, test_stimuli_38_5, test_stimuli_15_1, test_stimuli_15_2, test_stimuli_15_3, test_stimuli_15_4, test_stimuli_15_5, test_stimuli_8, test_stimuli_28_1, test_stimuli_28_2, test_stimuli_28_3, test_stimuli_30_1, test_stimuli_30_2, test_stimuli_30_3, test_stimuli_30_4, test_stimuli_36_1, test_stimuli_36_2, test_stimuli_36_3, test_stimuli_20_1, test_stimuli_20_2, test_stimuli_20_3, test_stimuli_20_4, test_stimuli_20_5, test_stimuli_12_1, test_stimuli_12_2, test_stimuli_12_3, test_stimuli_12_4, test_stimuli_14_1, test_stimuli_14_2, test_stimuli_14_4, test_stimuli_18_1, test_stimuli_18_2, test_stimuli_18_3, test_stimuli_18_4, test_stimuli_18_5];
     
-    //randomly selecting stimuli from each group, proportinal to the size of the groups. There are 85 in group 1, 609 in group 2, 156 in group 3, 167 in group 4, and 152 in group 5. 1169 in total. There are 11 stimuli total (I rounded to the nearest whole number, so there's one extra). //10, 50, 10, 10, 10, 20. (Made 20% smaller).
     var sample = jsPsych.randomization.sampleWithoutReplacement(array, 22);
 
-    var big = sample[0].concat(sample[1], sample[2], sample[3], sample[4], sample[5]);
+    var big = sample[0].concat(sample[1], sample[2], sample[3], sample[4], sample[5], sample[6], sample[7], sample[8], sample[9], sample[10], sample[11], sample[12], sample[13], sample[14], sample[15], sample[16], sample[17], sample[18], sample[19], sample[20], sample[21]);
+
+    print(big);
 
     var big_shuffled = jsPsych.randomization.shuffle(big);
 
     
-    var small = sample[0].concat(sample[1]);
+    //var small = sample[0].concat(sample[1]);
 
-    var small_shuffled = jsPsych.randomization.shuffle(small);
+    //var small_shuffled = jsPsych.randomization.shuffle(small);
     
     
     //creating the test
@@ -802,7 +804,7 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
     //creating the individual trials and pushing them onto the timeline
     var trial_one = {
       timeline: [practice_fixation, test],
-      timeline_variables: small_shuffled,
+      timeline_variables: big_shuffled,
       //randomize_order: true
     }
     timeline.push(trial_one);
@@ -878,7 +880,7 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
     function writeUserData(code) {
       firebase.database().ref('users/' + code).set({
       //User ID: code,
-      data: jsPsych.data.get().json(),
+      data: jsPsych.data.get().csv(),
       interactionData: jsPsych.data.getInteractionData().json()
       });
     }
