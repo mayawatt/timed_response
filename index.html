@@ -55,6 +55,15 @@
     var timeline = [];
 
 
+
+
+
+/*
+
+
+
+
+
     var robot = {
       type: "image-button-response",
       stimulus: 'img/horses.png',
@@ -193,7 +202,7 @@ timeline.push(demographics);
     var practice_fixation = {
       type: 'html-keyboard-response',
       //stimulus: "<p><strong>+</strong></p>" + "<p style = 'color:White; font-size: 24px;'>ooo</p>",
-      stimulus: '<div><font size="+3">+</font></div>',
+      stimulus: '<p><font size="+3">+</font></p>',
       choices: jsPsych.NO_KEYS,
       //prompt: "Press F for correct word and J for not the correct word.",
       prompt: 
@@ -424,6 +433,14 @@ timeline.push(demographics);
     };
     timeline.push(practice_thanks);
     //test stimuli data. Separated into 5 groups depending on inflection class (test_stimuli_one is all stimuli with an inflection class between 0 and 10, test_stimuli_two between 10 and 20, etc.)
+
+
+
+
+*/
+
+
+
 
     
 
@@ -762,11 +779,15 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
     
     var sample = jsPsych.randomization.sampleWithoutReplacement(array, 22);
 
-    var big = sample[0].concat(sample[1], sample[2], sample[3], sample[4], sample[5], sample[6], sample[7], sample[8], sample[9], sample[10], sample[11], sample[12], sample[13], sample[14], sample[15], sample[16], sample[17], sample[18], sample[19], sample[20], sample[21]);
+    console.log(sample);
 
-    print(big);
+    var big = [].concat(sample[0], sample[1], sample[2], sample[3], sample[4], sample[5], sample[6], sample[7], sample[8], sample[9], sample[10], sample[11], sample[12], sample[13], sample[14], sample[15], sample[16], sample[17], sample[18], sample[19], sample[20], sample[21]);
+
+    console.log(big)
 
     var big_shuffled = jsPsych.randomization.shuffle(big);
+
+    console.log(big_shuffled);
 
     
     //var small = sample[0].concat(sample[1]);
