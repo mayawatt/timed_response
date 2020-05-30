@@ -54,16 +54,6 @@
     //create timeline
     var timeline = [];
 
-
-
-
-
-/*
-
-
-
-
-
     var robot = {
       type: "image-button-response",
       stimulus: 'img/horses.png',
@@ -435,15 +425,6 @@ timeline.push(demographics);
     //test stimuli data. Separated into 5 groups depending on inflection class (test_stimuli_one is all stimuli with an inflection class between 0 and 10, test_stimuli_two between 10 and 20, etc.)
 
 
-
-
-*/
-
-
-
-
-    
-
     var practice_fixation = {
       type: 'html-keyboard-response',
       //stimulus: "<p><strong>+</strong></p>" + "<p style = 'color:White; font-size: 24px;'>ooo</p>",
@@ -779,15 +760,15 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
     
     var sample = jsPsych.randomization.sampleWithoutReplacement(array, 22);
 
-    console.log(sample);
+    //console.log(sample);
 
     var big = [].concat(sample[0], sample[1], sample[2], sample[3], sample[4], sample[5], sample[6], sample[7], sample[8], sample[9], sample[10], sample[11], sample[12], sample[13], sample[14], sample[15], sample[16], sample[17], sample[18], sample[19], sample[20], sample[21]);
 
-    console.log(big)
+    //console.log(big)
 
     var big_shuffled = jsPsych.randomization.shuffle(big);
 
-    console.log(big_shuffled);
+   //console.log(big_shuffled);
 
     
     //var small = sample[0].concat(sample[1]);
@@ -922,9 +903,9 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
     jsPsych.init({
       timeline: timeline,
       on_finish: function() {
-        //var turk = jsPsych.turk.turkInfo().hitId
-        jsPsych.data.displayData('json');
-        //alert("Your survey code is: " + code + ". Please copy this code now and paste it into Mechanical Turk. " + "You may then close this tab.");
+        var turk = jsPsych.turk.turkInfo().hitId
+        //jsPsych.data.displayData('json');
+        alert("Your survey code is: " + code + ". Please copy this code now and paste it into Mechanical Turk. " + "You may then close this tab.");
       }
     });
 
