@@ -71,13 +71,7 @@ jsPsych.plugins['same-different-html'] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
-    var ah = '<div class="jspsych-same-different-stimulus">'+trial.stimuli[0]+'</div>';
-
-    //show prompt here
-      if (trial.prompt !== null) {
-        ah += trial.prompt;
-      }
-      display_element.innerHTML = ah;
+ display_element.innerHTML = '<div class="jspsych-same-different-stimulus">'+trial.stimuli[0]+'</div>';
 
     var first_stim_info;
     if (trial.first_stim_duration > 0) {
