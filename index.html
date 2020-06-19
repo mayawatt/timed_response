@@ -54,6 +54,8 @@
     //create timeline
     var timeline = [];
 
+    
+
     var robot = {
       type: "image-button-response",
       stimulus: 'img/horses.png',
@@ -194,7 +196,7 @@ timeline.push(demographics);
       //stimulus: "<p><strong>+</strong></p>" + "<p style = 'color:White; font-size: 24px;'>ooo</p>",
       stimulus: '<p><font size="+3">+</font></p>',
       choices: jsPsych.NO_KEYS,
-      //prompt: "Press F for correct word and J for not the correct word.",
+      prompt:  "<img src='img/blank.png'></img>",
       /*
       prompt: 
       	  "<div style='width: 600px;'>" +
@@ -239,9 +241,9 @@ timeline.push(demographics);
           "<div class='float: right;'><img src='img/letter_j.png'></img>" +
           "<p class='small'><strong>         incorrect</strong></p></div>" +
           "</div>",
-
+    second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
-    different_key: 'j'
+    different_key: 'j',
   };
 
       var practice_test_2 = {
@@ -257,6 +259,7 @@ timeline.push(demographics);
           "<div class='float: right;'><img src='img/letter_j.png'></img>" +
           "<p class='small'><strong>         incorrect</strong></p></div>" +
           "</div>",
+    second_prompt: "<img src='img/blank.png'></img>",
 
     same_key: 'f',
     different_key: 'j'
@@ -276,6 +279,7 @@ timeline.push(demographics);
           "<div class='float: right;'><img src='img/letter_j.png'></img>" +
           "<p class='small'><strong>         incorrect</strong></p></div>" +
           "</div>",
+          second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
     different_key: 'j'
   };
@@ -294,6 +298,7 @@ timeline.push(demographics);
           "<div class='float: right;'><img src='img/letter_j.png'></img>" +
           "<p class='small'><strong>         incorrect</strong></p></div>" +
           "</div>",
+          second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
     different_key: 'j'
   };
@@ -311,6 +316,7 @@ timeline.push(demographics);
           "<div class='float: right;'><img src='img/letter_j.png'></img>" +
           "<p class='small'><strong>         incorrect</strong></p></div>" +
           "</div>",
+          second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
     different_key: 'j'
   };
@@ -329,6 +335,7 @@ timeline.push(demographics);
           "<div class='float: right;'><img src='img/letter_j.png'></img>" +
           "<p class='small'><strong>         incorrect</strong></p></div>" +
           "</div>",
+          second_prompt: "<img src='img/blank.png'></img>",
 
     same_key: 'f',
     different_key: 'j'
@@ -347,6 +354,7 @@ timeline.push(demographics);
           "<div class='float: right;'><img src='img/letter_j.png'></img>" +
           "<p class='small'><strong>         incorrect</strong></p></div>" +
           "</div>",
+          second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
     different_key: 'j'
   };
@@ -365,6 +373,7 @@ timeline.push(demographics);
           "<div class='float: right;'><img src='img/letter_j.png'></img>" +
           "<p class='small'><strong>         incorrect</strong></p></div>" +
           "</div>",
+          second_prompt: "<img src='img/blank.png'></img>",
 
     same_key: 'f',
     different_key: 'j'
@@ -384,6 +393,7 @@ timeline.push(demographics);
           "<div class='float: right;'><img src='img/letter_j.png'></img>" +
           "<p class='small'><strong>         incorrect</strong></p></div>" +
           "</div>",
+    second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
     different_key: 'j'
   };
@@ -399,8 +409,9 @@ timeline.push(demographics);
           "<div style='width: 600px;'>" +
           "<div class='float: right;'><img src='img/letter_j.png'></img>" +
           "<p class='small'><strong>         incorrect</strong></p></div>" +
-          "</div>"
-    }
+          "</div>",
+     second_prompt: "<img src='img/blank.png'></img>",
+    };
 
 
       var practice_one = {
@@ -432,7 +443,7 @@ timeline.push(demographics);
       //stimulus: "<p><strong>+</strong></p>" + "<p style = 'color:White; font-size: 24px;'>ooo</p>",
       stimulus: '<p><font size="+3">+</font></p>',
       choices: jsPsych.NO_KEYS,
-      //prompt: "Press F for correct word and J for not the correct word.",
+      prompt: "<img src='img/blank.png'></img>",
 
       /*
       prompt: 
@@ -797,6 +808,8 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
           "<div class='float: right;'><img src='img/letter_j.png'></img>" +
           "<p class='small'><strong>         incorrect</strong></p></div>" +
           "</div>",
+
+    second_prompt: "<img src='img/blank.png'></img>",
 
     same_key: 'f',
     different_key: 'j'

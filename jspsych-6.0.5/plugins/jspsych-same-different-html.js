@@ -65,13 +65,26 @@ jsPsych.plugins['same-different-html'] = (function() {
         pretty_name: 'Prompt',
         default: null,
         description: 'Any content here will be displayed below the stimulus.'
-      }
-    }
+      },
+      second_prompt: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Second Prompt',
+        default: null,
+        description: 'A prompt to display during the first stimuli.'
+    },
   }
+}
 
   plugin.trial = function(display_element, trial) {
 
- display_element.innerHTML = '<div class="jspsych-same-different-stimulus">'+trial.stimuli[0]+'</div>';
+ var ah = '<div class="jspsych-same-different-stimulus">'+trial.stimuli[0]+'</div>';
+
+//show prompt here
+if (trial.second_prompt !== null) {
+ah += trial.second_prompt;
+}
+
+display_element.innerHTML = ah;
 
     var first_stim_info;
     if (trial.first_stim_duration > 0) {
