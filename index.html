@@ -60,7 +60,8 @@
       type: "image-button-response",
       stimulus: 'img/horses.png',
       choices: ['Dolphin', 'Horse', 'Tiger', 'Elephant'],
-      prompt: "<p>What animal is in the picture?</p>"
+      prompt: "<p>What animal is in the picture?</p>",
+      data: {test_part: 'important'}
     };
     timeline.push(robot);
 
@@ -98,14 +99,16 @@
     var calibration_test = {
       type: "image-keyboard-response",
       stimulus: jsPsych.timelineVariable('stimulus'),
-      choice: ['f']
+      choice: ['f'],
+      data: {test_part: 'important'}
     };
 
     var calibration_test_procedure = {
       timeline: [calibration_fixation, calibration_test],
       timeline_variables: test_stimuli,
       //randomized_order: true,
-      repetitions: 5
+      repetitions: 5,
+      data: {test_part: 'important'}
     }
     timeline.push(calibration_test_procedure);
 
@@ -139,6 +142,7 @@
 
 var demographics = {
 	type: 'dropdown',
+  data: {test_part: 'important'},
 	superq: "Please answer the following questions:",
     questions: [
 		{
@@ -244,6 +248,7 @@ timeline.push(demographics);
     second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
     different_key: 'j',
+    data: {test_part: 'important'}
   };
 
       var practice_test_2 = {
@@ -262,7 +267,8 @@ timeline.push(demographics);
     second_prompt: "<img src='img/blank.png'></img>",
 
     same_key: 'f',
-    different_key: 'j'
+    different_key: 'j',
+    data: {test_part: 'important'}
   };
 
       var practice_test_3 = {
@@ -281,7 +287,8 @@ timeline.push(demographics);
           "</div>",
           second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
-    different_key: 'j'
+    different_key: 'j',
+    data: {test_part: 'important'}
   };
 
       var practice_test_4 = {
@@ -300,7 +307,8 @@ timeline.push(demographics);
           "</div>",
           second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
-    different_key: 'j'
+    different_key: 'j',
+    data: {test_part: 'important'}
   };
 
       var practice_test_5 = {
@@ -318,7 +326,8 @@ timeline.push(demographics);
           "</div>",
           second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
-    different_key: 'j'
+    different_key: 'j',
+    data: {test_part: 'important'}
   };
 
       var practice_test_6 = {
@@ -338,7 +347,8 @@ timeline.push(demographics);
           second_prompt: "<img src='img/blank.png'></img>",
 
     same_key: 'f',
-    different_key: 'j'
+    different_key: 'j',
+    data: {test_part: 'important'}
   };
 
       var practice_test_7 = {
@@ -356,7 +366,8 @@ timeline.push(demographics);
           "</div>",
           second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
-    different_key: 'j'
+    different_key: 'j',
+    data: {test_part: 'important'}
   };
 
     var practice_test_8 = {
@@ -376,7 +387,8 @@ timeline.push(demographics);
           second_prompt: "<img src='img/blank.png'></img>",
 
     same_key: 'f',
-    different_key: 'j'
+    different_key: 'j',
+    data: {test_part: 'important'}
   };
 
     var practice_test_9 = {
@@ -395,7 +407,8 @@ timeline.push(demographics);
           "</div>",
     second_prompt: "<img src='img/blank.png'></img>",
     same_key: 'f',
-    different_key: 'j'
+    different_key: 'j',
+    data: {test_part: 'important'}
   };
     //creating the test
     var practice_test = {
@@ -411,6 +424,7 @@ timeline.push(demographics);
           "<p class='small'><strong>         incorrect</strong></p></div>" +
           "</div>",
      second_prompt: "<img src='img/blank.png'></img>",
+     data: {test_part: 'important'}
     };
 
 
@@ -423,6 +437,7 @@ timeline.push(demographics);
 
     var checkbox = {
     	type: "html-button-response",
+      data: {test_part: 'important'},
     	stimulus: "<p>Thank you for completing the practice test.</p>" + "<p>A pop-up will appear at the end of the experiment. This pop-up will contain a code you can copy-paste into Mechanical Turk. I understand that if I close the pop-up, there is no way to re-access the code. I understand that if I close the pop-up before copying the code, I will not be paid.</p>",
     	choices: ['I agree'],
     };
@@ -777,25 +792,20 @@ var test_stimuli_18_1 = [
     { stimuli: ['<p><font size="+3"><u>to blend</u></font></p>', '<p><font size="+3">blended</font></p>']},
 ];
 
+/*
 var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimuli_38_4, test_stimuli_38_5, test_stimuli_15_1, test_stimuli_15_2, test_stimuli_15_3, test_stimuli_15_4, test_stimuli_15_5, test_stimuli_8, test_stimuli_28_1, test_stimuli_28_2, test_stimuli_28_3, test_stimuli_30_1, test_stimuli_30_2, test_stimuli_30_3, test_stimuli_30_4, test_stimuli_36_1, test_stimuli_36_2, test_stimuli_36_3, test_stimuli_20_1, test_stimuli_20_2, test_stimuli_20_3, test_stimuli_20_4, test_stimuli_12_1, test_stimuli_12_2, test_stimuli_12_3, test_stimuli_12_4, test_stimuli_14_1, test_stimuli_14_2, test_stimuli_14_4, test_stimuli_18_1, test_stimuli_18_2, test_stimuli_18_3, test_stimuli_18_4, test_stimuli_18_5];
     
     var sample = jsPsych.randomization.sampleWithoutReplacement(array, 22);
 
-    //console.log(sample);
-
     var big = [].concat(sample[0], sample[1], sample[2], sample[3], sample[4], sample[5], sample[6], sample[7], sample[8], sample[9], sample[10], sample[11], sample[12], sample[13], sample[14], sample[15], sample[16], sample[17], sample[18], sample[19], sample[20], sample[21]);
-
-    //console.log(big)
 
     var big_shuffled = jsPsych.randomization.shuffle(big);
 
-   //console.log(big_shuffled);
+*/
 
+var big = [].concat(test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimuli_38_4, test_stimuli_38_5, test_stimuli_15_1, test_stimuli_15_2, test_stimuli_15_3, test_stimuli_15_4, test_stimuli_15_5, test_stimuli_8, test_stimuli_28_1, test_stimuli_28_2, test_stimuli_28_3, test_stimuli_30_1, test_stimuli_30_2, test_stimuli_30_3, test_stimuli_30_4);
     
-    //var small = sample[0].concat(sample[1]);
-
-    //var small_shuffled = jsPsych.randomization.shuffle(small);
-    
+     var big_shuffled = jsPsych.randomization.shuffle(big);
     
     //creating the test
    var test = {
@@ -816,7 +826,8 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
     second_prompt: "<img src='img/blank.png'></img>",
 
     same_key: 'f',
-    different_key: 'j'
+    different_key: 'j',
+    data: {test_part: 'important'}
   };
 
     /*
@@ -830,6 +841,7 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
     var trial_one = {
       timeline: [practice_fixation, test],
       timeline_variables: big_shuffled,
+      data: {test_part: 'important'}
       //randomize_order: true
     }
     timeline.push(trial_one);
@@ -905,8 +917,8 @@ var array = [test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, test_stimu
     function writeUserData(code) {
       firebase.database().ref('users/' + code).set({
       //User ID: code,
-      data: jsPsych.data.get().csv(),
-      interactionData: jsPsych.data.getInteractionData().json()
+      data: jsPsych.data.get().filter({test_part: 'important'}).csv(),
+      interactionData: jsPsych.data.getInteractionData().csv()
       });
     }
 
