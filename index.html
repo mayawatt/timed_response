@@ -108,7 +108,7 @@
       timeline_variables: test_stimuli,
       //randomized_order: true,
       repetitions: 5,
-      data: {test_part: 'important'}
+      //data: {test_part: 'important'}
     }
     timeline.push(calibration_test_procedure);
 
@@ -841,7 +841,7 @@ var big = [].concat(test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, tes
     var trial_one = {
       timeline: [practice_fixation, test],
       timeline_variables: big_shuffled,
-      data: {test_part: 'important'}
+      //data: {test_part: 'important'}
       //randomize_order: true
     }
     timeline.push(trial_one);
@@ -939,7 +939,7 @@ var big = [].concat(test_stimuli_38_1, test_stimuli_38_2, test_stimuli_38_3, tes
       timeline: timeline,
       on_finish: function() {
         var turk = jsPsych.turk.turkInfo().hitId
-        //jsPsych.data.displayData('json');
+        //jsPsych.data.displayData('csv');
         alert("Your survey code is: " + code + ". Please copy this code now and paste it into Mechanical Turk. " + "You may then close this tab.");
       }
     });
