@@ -10,14 +10,13 @@ GITHUB PAGES I used GitHub Pages to host the experiment. See https://pages.githu
 
 FIREBASE SETUP AND INSTALLATION In order to use Firebase, I did the following in-order:
 
-    Login to https://firebase.google.com/ with a Google account and create a “New Project”.
-    Open the terminal and cd to the root directory (cd /). Install Node.js (I did so via Homebrew). This installs npm.
-    Run npm install -g firebase-tools in the terminal to install the Firebase CLI (Command Line Interface).
-    Save your project in a directory within a directory and cd into the outer directory. I had my index.html in a folder in a folder on my desktop.
-    Log into the CLI. You do this with the command firebase login. You will be asked to login with your Google username and password. My terminal didn’t recognize firebase, so I copy-pasted the following alias into my terminal: npm config get prefix/bin/firebase
-    Run firebase init. When asked which CLI features you’d like to set up, choose "Database".*
-    You’ll be asked to set up a default project for the directory. Select the inner folder (i.e. the folder with your project).
-    Hit enter twice to select the default options for the next two questions, then enter "N" for the third. Finally, hit enter again to accept the default name for your storage rules. *At first, firebase init gave an error saying firebase.auth() is not a function. This seems to be a common problem. I fixed it using this person’s documentation: https://stackoverflow.com/questions/48592656/firebase-auth-is-not-a-function I stopped following the documentation after deploying (I think I may have tried it and it just didn’t work for me). Instead I followed this tutorial, which I highly recommend: https://www.youtube.com/watch?v=noB98K6A0TY Firebase’s free real time database stores 1 GB of data. Each experiment takes up 294.6 KB of data. Firebase can accommodate the data for 3,394 participants.
+(1) Login to https://firebase.google.com/ with a Google account and create a “New Project”.
+(2) Open the terminal and cd to the root directory (cd /). Install Node.js (I did so via Homebrew). This installs npm.
+(3) Run npm install -g firebase-tools in the terminal to install the Firebase CLI (Command Line Interface).
+(4) Save your project in a directory within a directory and cd into the outer directory. I had my index.html in a folder in a folder on my desktop.
+(5) Log into the CLI. You do this with the command firebase login. You will be asked to login with your Google username and password. My terminal didn’t recognize firebase, so I copy-pasted the following alias into my terminal: npm config get prefix/bin/firebase
+(6) Run firebase init. When asked which CLI features you’d like to set up, choose "Database".* You’ll be asked to set up a default project for the directory. Select the inner folder (i.e. the folder with your project).
+(7) Hit enter twice to select the default options for the next two questions, then enter "N" for the third. Finally, hit enter again to accept the default name for your storage rules. *At first, firebase init gave an error saying firebase.auth() is not a function. This seems to be a common problem. I fixed it using this person’s documentation: https://stackoverflow.com/questions/48592656/firebase-auth-is-not-a-function I stopped following the documentation after deploying (I think I may have tried it and it just didn’t work for me). Instead I followed this tutorial, which I highly recommend: https://www.youtube.com/watch?v=noB98K6A0TY Firebase’s free real time database stores 1 GB of data. Each experiment takes up 294.6 KB of data. Firebase can accommodate the data for 3,394 participants.
 
 INTEGRATING WITH MECHANICAL TURK I saved the data in CSV format (using one of the JsPsych plug-ins). I’m sure there’s a more elegant solution to make the data compatible with Firebase, but this worked fine.
 
